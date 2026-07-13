@@ -1,0 +1,204 @@
+[
+  {
+    "id": "g1s-s-001",
+    "type": "calculation",
+    "question": "3 + 5 = ？",
+    "answer": "8",
+    "knowledgePoints": ["add-sub-10"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网·一上第一单元"
+  },
+  {
+    "id": "g1s-s-002",
+    "type": "calculation",
+    "question": "8 - 3 = ？",
+    "answer": "5",
+    "knowledgePoints": ["add-sub-10"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-003",
+    "type": "calculation",
+    "question": "6 + 4 = ？",
+    "answer": "10",
+    "knowledgePoints": ["add-sub-10"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-004",
+    "type": "calculation",
+    "question": "10 - 7 = ？",
+    "answer": "3",
+    "knowledgePoints": ["add-sub-10"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-005",
+    "type": "fill_blank",
+    "question": "9可以分成4和____，也可以分成____和3。",
+    "answer": "5, 6",
+    "knowledgePoints": ["number-1-9"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-006",
+    "type": "fill_blank",
+    "question": "在〇里填上 >、< 或 =：7 〇 10，5 〇 2，9 〇 9。",
+    "answer": "<, >, =",
+    "knowledgePoints": ["number-1-9"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-007",
+    "type": "fill_blank",
+    "question": "1个十和6个一是____，18里面有____个十和____个一。",
+    "answer": "16, 1, 8",
+    "knowledgePoints": ["number-11-20"],
+    "difficulty": 1,
+    "errorProne": ["数位理解"],
+    "source": "21世纪教育网·一上第三单元"
+  },
+  {
+    "id": "g1s-s-008",
+    "type": "fill_blank",
+    "question": "10 + 3 = ____，17 - 7 = ____，13 - 10 = ____。",
+    "answer": "13, 10, 3",
+    "knowledgePoints": ["number-11-20"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-009",
+    "type": "fill_blank",
+    "question": "11, ( ), 13, ( ), ( ), 16, ( ), 18, ( ), ( )",
+    "answer": "12, 14, 15, 17, 19, 20",
+    "knowledgePoints": ["number-11-20"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-010",
+    "type": "choice",
+    "question": "哪个图形是正方体？",
+    "options": ["A. 长长方方，对面一样大", "B. 正正方方，每个面都一样", "C. 直直的上下一样粗", "D. 可以任意滚动"],
+    "answer": "B",
+    "knowledgePoints": ["shapes-3d"],
+    "difficulty": 1,
+    "errorProne": ["长方体和正方体混淆"],
+    "source": "21世纪教育网·一上第二单元"
+  },
+  {
+    "id": "g1s-s-011",
+    "type": "choice",
+    "question": "哪个图形可以任意滚动？",
+    "options": ["A. 长方体", "B. 正方体", "C. 圆柱", "D. 球"],
+    "answer": "D",
+    "knowledgePoints": ["shapes-3d"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-012",
+    "type": "true_false",
+    "question": "圆柱上下两个面大小一样。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["shapes-3d"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-013",
+    "type": "true_false",
+    "question": "长方体有6个面，每个面都是长方形。（ ）",
+    "answer": "×",
+    "knowledgePoints": ["shapes-3d"],
+    "difficulty": 2,
+    "errorProne": ["正方体也是长方体的一种"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-014",
+    "type": "calculation",
+    "question": "9 + 3 = ？",
+    "answer": "12",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": ["凑十法"],
+    "source": "21世纪教育网·一上第四单元"
+  },
+  {
+    "id": "g1s-s-015",
+    "type": "calculation",
+    "question": "8 + 7 = ？",
+    "answer": "15",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": ["凑十法"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-016",
+    "type": "calculation",
+    "question": "7 + 6 = ？",
+    "answer": "13",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-017",
+    "type": "calculation",
+    "question": "6 + 5 = ？",
+    "answer": "11",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-018",
+    "type": "calculation",
+    "question": "3 + 4 + 6 = ？",
+    "answer": "13",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": ["连加顺序"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-019",
+    "type": "calculation",
+    "question": "8 + 2 + 9 = ？",
+    "answer": "19",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1s-s-020",
+    "type": "fill_blank",
+    "question": "15 + 3 = ____，表示____个十和____个一加3个一，等于____个十和____个一。",
+    "answer": "18, 1, 5, 1, 8",
+    "knowledgePoints": ["add-20"],
+    "difficulty": 2,
+    "errorProne": ["数位理解"],
+    "source": "21世纪教育网"
+  }
+]

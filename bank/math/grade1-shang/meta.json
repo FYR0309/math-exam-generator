@@ -1,0 +1,82 @@
+{
+  "subject": "math",
+  "subjectName": "数学",
+  "grade": 1,
+  "gradeLabel": "一年级",
+  "textbook": "冀教版2024新版",
+  "schoolYear": "2025-2026",
+  "semester": "上册",
+
+  "questionTypes": [
+    "calculation",
+    "fill_blank",
+    "true_false",
+    "choice",
+    "application"
+  ],
+
+  "defaultTemplateRatio": 0.2,
+
+  "knowledgePoints": [
+    {
+      "id": "number-1-9",
+      "name": "认识1~9",
+      "category": "数感",
+      "difficulty": 1,
+      "subTopics": ["数的意义", "几个和第几个", "合与分", "0的认识和加减", "10的认识和加减"],
+      "canComboWith": [],
+      "prerequisites": []
+    },
+    {
+      "id": "add-sub-10",
+      "name": "10以内的加减",
+      "category": "计算",
+      "difficulty": 1,
+      "canComboWith": ["word-problem-1step"],
+      "prerequisites": ["number-1-9"]
+    },
+    {
+      "id": "shapes-3d",
+      "name": "认识图形（一）",
+      "category": "几何",
+      "difficulty": 1,
+      "subTopics": ["长方体", "正方体", "圆柱", "球"],
+      "canComboWith": [],
+      "prerequisites": []
+    },
+    {
+      "id": "number-11-20",
+      "name": "认识11~20",
+      "category": "数感",
+      "difficulty": 1,
+      "subTopics": ["数的认识", "10加几和相应的减法"],
+      "canComboWith": ["add-20"],
+      "prerequisites": ["number-1-9"]
+    },
+    {
+      "id": "add-20",
+      "name": "20以内的加法",
+      "category": "计算",
+      "difficulty": 2,
+      "subTopics": ["十几加几", "9加几", "8加几", "7、6加几", "连加"],
+      "canComboWith": ["word-problem-1step"],
+      "prerequisites": ["add-sub-10", "number-11-20"]
+    },
+    {
+      "id": "word-problem-1step",
+      "name": "一步应用题",
+      "category": "应用",
+      "difficulty": 2,
+      "canComboWith": ["add-sub-10", "add-20"],
+      "prerequisites": ["add-sub-10"]
+    },
+    {
+      "id": "explore-park-1s",
+      "name": "探索乐园",
+      "category": "思维",
+      "difficulty": 2,
+      "canComboWith": [],
+      "prerequisites": []
+    }
+  ]
+}

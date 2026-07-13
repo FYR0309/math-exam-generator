@@ -1,0 +1,93 @@
+{
+  "title": "冀教版三年级下册数学期末测试卷",
+  "totalScore": 100,
+  "duration": 60,
+  "headerFields": ["班级____", "姓名____", "得分____"],
+
+  "sections": [
+    {
+      "name": "一、填空题",
+      "instruction": "（每空2分，共20分）",
+      "totalPoints": 20,
+      "items": [
+        { "count": 5, "type": "fill_blank", "pointsEach": 2, "knowledgePoints": ["year-month-day", "measurement-2"], "sourceType": "static" },
+        { "count": 5, "type": "fill_blank", "pointsEach": 2, "knowledgePoints": ["multi-digit-multiplication", "decimal-life"], "sourceType": "static" }
+      ]
+    },
+    {
+      "name": "二、判断题",
+      "instruction": "（对的打\"√\"，错的打\"×\"。每题1分，共5分）",
+      "totalPoints": 5,
+      "items": [
+        { "count": 5, "type": "true_false", "pointsEach": 1, "knowledgePoints": ["year-month-day", "figure-movement", "multi-digit-multiplication"], "sourceType": "static" }
+      ]
+    },
+    {
+      "name": "三、选择题",
+      "instruction": "（将正确答案的序号填在括号里。每题2分，共10分）",
+      "totalPoints": 10,
+      "items": [
+        { "count": 5, "type": "choice", "pointsEach": 2, "knowledgePoints": ["year-month-day", "multi-digit-multiplication", "decimal-life", "figure-movement", "measurement-2"], "sourceType": "static" }
+      ]
+    },
+    {
+      "name": "四、计算题",
+      "instruction": "（共35分）",
+      "totalPoints": 35,
+      "subSections": [
+        {
+          "name": "1. 直接写得数",
+          "instruction": "（每题1分，共8分）",
+          "items": [
+            { "count": 8, "type": "calculation", "pointsEach": 1, "knowledgePoints": ["multi-digit-multiplication", "decimal-life"], "sourceType": "static" }
+          ]
+        },
+        {
+          "name": "2. 用竖式计算",
+          "instruction": "（每题3分，共12分）",
+          "items": [
+            { "count": 4, "type": "calculation", "pointsEach": 3, "knowledgePoints": ["multi-digit-multiplication"], "sourceType": "static" }
+          ]
+        },
+        {
+          "name": "3. 脱式计算",
+          "instruction": "（每题3分，共9分）",
+          "items": [
+            { "count": 3, "type": "calculation", "pointsEach": 3, "knowledgePoints": ["multi-digit-multiplication", "decimal-life"], "sourceType": "static" }
+          ]
+        },
+        {
+          "name": "4. 估算",
+          "instruction": "（每题2分，共6分）",
+          "items": [
+            { "count": 3, "type": "calculation", "pointsEach": 2, "knowledgePoints": ["multi-digit-multiplication"], "sourceType": "static" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "五、操作题",
+      "instruction": "（共8分）",
+      "totalPoints": 8,
+      "items": [
+        { "count": 2, "type": "true_false", "pointsEach": 2, "knowledgePoints": ["figure-movement"], "sourceType": "static" },
+        { "count": 2, "type": "choice", "pointsEach": 2, "knowledgePoints": ["figure-movement"], "sourceType": "static" }
+      ]
+    },
+    {
+      "name": "六、解决问题",
+      "instruction": "（第1-2题每题4分，第3-5题每题4分，共20分）",
+      "totalPoints": 20,
+      "items": [
+        { "count": 2, "type": "application", "pointsEach": 4, "knowledgePoints": ["multi-digit-multiplication", "word-problem-2"], "sourceType": "template" },
+        { "count": 2, "type": "application", "pointsEach": 4, "knowledgePoints": ["decimal-life", "word-problem-2"], "sourceType": "template" },
+        { "count": 1, "type": "application", "pointsEach": 4, "knowledgePoints": ["year-month-day", "word-problem-2"], "sourceType": "template" }
+      ]
+    }
+  ],
+
+  "_notes": {
+    "操作题": "真实考试中的操作题含画图/测量等，本卷用图形的运动判断题+选择题替代",
+    "估算": "真实考试常考乘法估算（如35×17≈600），用近似计算题替代"
+  }
+}

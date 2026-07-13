@@ -1,0 +1,105 @@
+{
+  "subject": "math",
+  "subjectName": "数学",
+  "grade": 3,
+  "gradeLabel": "三年级",
+  "textbook": "冀教版2024新版",
+  "schoolYear": "2025-2026",
+  "semester": "下册",
+
+  "questionTypes": [
+    "calculation",
+    "fill_blank",
+    "true_false",
+    "choice",
+    "application"
+  ],
+
+  "defaultTemplateRatio": 0.5,
+
+  "knowledgePoints": [
+    {
+      "id": "year-month-day",
+      "name": "年、月、日",
+      "category": "应用",
+      "difficulty": 2,
+      "subTopics": ["24时记时法", "年月日", "平年闰年", "二十四节气"],
+      "canComboWith": ["multi-digit-multiplication", "decimal-life"],
+      "prerequisites": []
+    },
+    {
+      "id": "word-problem-2",
+      "name": "问题与运算（二）",
+      "category": "应用",
+      "difficulty": 3,
+      "canComboWith": ["multi-digit-multiplication", "year-month-day", "decimal-life"],
+      "prerequisites": ["multi-digit-multiplication"]
+    },
+    {
+      "id": "observe-objects",
+      "name": "观察物体",
+      "category": "几何",
+      "difficulty": 1,
+      "canComboWith": [],
+      "prerequisites": []
+    },
+    {
+      "id": "multi-digit-multiplication",
+      "name": "多位数乘法",
+      "category": "计算",
+      "difficulty": 3,
+      "subTopics": ["两位数乘两位数", "三位数乘两位数"],
+      "canComboWith": ["year-month-day", "decimal-life", "measurement-2", "word-problem-2"],
+      "prerequisites": []
+    },
+    {
+      "id": "measurement-2",
+      "name": "测量（二）",
+      "category": "应用",
+      "difficulty": 2,
+      "subTopics": ["分米和毫米", "千米"],
+      "canComboWith": ["multi-digit-multiplication"],
+      "prerequisites": []
+    },
+    {
+      "id": "data-collection",
+      "name": "数据收集和整理",
+      "category": "统计",
+      "difficulty": 2,
+      "canComboWith": ["multi-digit-multiplication"],
+      "prerequisites": []
+    },
+    {
+      "id": "decimal-life",
+      "name": "生活中的小数",
+      "category": "应用",
+      "difficulty": 2,
+      "subTopics": ["元角分与小数", "小数加减"],
+      "canComboWith": ["multi-digit-multiplication", "year-month-day", "word-problem-2"],
+      "prerequisites": []
+    },
+    {
+      "id": "figure-movement",
+      "name": "图形的运动（一）",
+      "category": "几何",
+      "difficulty": 1,
+      "subTopics": ["轴对称", "平移", "旋转"],
+      "canComboWith": [],
+      "prerequisites": []
+    },
+    {
+      "id": "explore-park",
+      "name": "探索乐园",
+      "category": "思维",
+      "difficulty": 3,
+      "canComboWith": [],
+      "prerequisites": []
+    }
+  ],
+
+  "_notes": {
+    "observe-objects": "搜到的具体题目偏少，以操作题为主，待补充",
+    "data-collection": "搜到的具体题目偏少，以统计表读题为主，待补充",
+    "explore-park": "几乎没搜到具体题，以逻辑推理、数字规律为主，待补充"
+  }
+}

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "g1x-s-001",
+    "type": "calculation",
+    "question": "12 - 4 = ？",
+    "answer": "8",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": ["退位减法"],
+    "source": "21世纪教育网·一下第一单元"
+  },
+  {
+    "id": "g1x-s-002",
+    "type": "calculation",
+    "question": "15 - 8 = ？",
+    "answer": "7",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": ["破十法"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-003",
+    "type": "calculation",
+    "question": "13 - 7 = ？",
+    "answer": "6",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-004",
+    "type": "calculation",
+    "question": "17 - 9 = ？",
+    "answer": "8",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": ["破十法"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-005",
+    "type": "calculation",
+    "question": "11 - 5 = ？",
+    "answer": "6",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-006",
+    "type": "calculation",
+    "question": "12 - 4 - 3 = ？",
+    "answer": "5",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": ["连减"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-007",
+    "type": "calculation",
+    "question": "14 - 6 + 2 = ？",
+    "answer": "10",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": ["加减混合"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-008",
+    "type": "calculation",
+    "question": "18 - 7 - 5 = ？",
+    "answer": "6",
+    "knowledgePoints": ["subtract-20"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-009",
+    "type": "fill_blank",
+    "question": "34 + 5 = ____，67 - 4 = ____。",
+    "answer": "39, 63",
+    "knowledgePoints": ["number-100"],
+    "difficulty": 2,
+    "errorProne": ["数位对齐"],
+    "source": "21世纪教育网·一下第三单元"
+  },
+  {
+    "id": "g1x-s-010",
+    "type": "fill_blank",
+    "question": "45 + 30 = ____，78 - 50 = ____。",
+    "answer": "75, 28",
+    "knowledgePoints": ["number-100"],
+    "difficulty": 2,
+    "errorProne": ["整十数加减"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-011",
+    "type": "fill_blank",
+    "question": "在〇里填上 >、< 或 =：68 〇 72，45 〇 45，91 〇 89。",
+    "answer": "<, =, >",
+    "knowledgePoints": ["number-100"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-012",
+    "type": "calculation",
+    "question": "34 + 47 = ？",
+    "answer": "81",
+    "knowledgePoints": ["add-sub-2digit"],
+    "difficulty": 3,
+    "errorProne": ["进位加法"],
+    "source": "21世纪教育网·一下第四单元"
+  },
+  {
+    "id": "g1x-s-013",
+    "type": "calculation",
+    "question": "27 + 63 = ？",
+    "answer": "90",
+    "knowledgePoints": ["add-sub-2digit"],
+    "difficulty": 3,
+    "errorProne": ["进位"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-014",
+    "type": "calculation",
+    "question": "56 + 37 = ？",
+    "answer": "93",
+    "knowledgePoints": ["add-sub-2digit"],
+    "difficulty": 3,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-015",
+    "type": "calculation",
+    "question": "72 - 38 = ？",
+    "answer": "34",
+    "knowledgePoints": ["add-sub-2digit"],
+    "difficulty": 3,
+    "errorProne": ["退位减法"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-016",
+    "type": "fill_blank",
+    "question": "笔算两位数加两位数（进位）：____数位对齐，从____位加起，个位相加满十，向____位进____。",
+    "answer": "相同, 个, 十, 1",
+    "knowledgePoints": ["add-sub-2digit"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-017",
+    "type": "fill_blank",
+    "question": "5元 = ____角，1元 = ____分，3元5角 = ____角。",
+    "answer": "50, 100, 35",
+    "knowledgePoints": ["rmb"],
+    "difficulty": 1,
+    "errorProne": ["单位换算"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-018",
+    "type": "fill_blank",
+    "question": "一把尺子2元，一支铅笔1元5角，一共____元____角。",
+    "answer": "3, 5",
+    "knowledgePoints": ["rmb"],
+    "difficulty": 2,
+    "errorProne": ["元角混算"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-019",
+    "type": "true_false",
+    "question": "小明有15个气球，破了5个，还剩10个。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["subtract-20", "word-problem-1step-xia"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g1x-s-020",
+    "type": "calculation",
+    "question": "43 + 48 = ？",
+    "answer": "91",
+    "knowledgePoints": ["add-sub-2digit"],
+    "difficulty": 3,
+    "errorProne": ["进位"],
+    "source": "21世纪教育网"
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "g1s-t-001",
+    "type": "application",
+    "template": "小明有 {a} 个苹果，妈妈又给他 {b} 个，小明现在有多少个苹果？",
+    "knowledgePoints": ["add-sub-10", "word-problem-1step"],
+    "difficulty": 1,
+    "errorProne": [],
+    "slots": {
+      "a": { "type": "range", "min": 3, "max": 7 },
+      "b": { "type": "range", "min": 2, "max": 5 }
+    },
+    "constraints": [
+      { "check": "a + b <= 10", "msg": "和在10以内" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a + b",
+      "unit": "个"
+    },
+    "source": "21世纪教育网·一上·一步加法应用"
+  },
+  {
+    "id": "g1s-t-002",
+    "type": "application",
+    "template": "小明有 {a} 个苹果，吃了 {b} 个，还剩几个？",
+    "knowledgePoints": ["add-sub-10", "word-problem-1step"],
+    "difficulty": 1,
+    "errorProne": [],
+    "slots": {
+      "a": { "type": "range", "min": 5, "max": 10 },
+      "b": { "type": "range", "min": 1, "max": 5 }
+    },
+    "constraints": [
+      { "check": "a > b", "msg": "原有数量应大于吃掉数量" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a - b",
+      "unit": "个"
+    },
+    "source": "21世纪教育网·一上·一步减法应用"
+  },
+  {
+    "id": "g1s-t-003",
+    "type": "application",
+    "template": "池塘里有 {a} 只鸭子，又游来了 {b} 只，现在一共有多少只鸭子？",
+    "knowledgePoints": ["add-20", "word-problem-1step"],
+    "difficulty": 2,
+    "errorProne": [],
+    "slots": {
+      "a": { "type": "range", "min": 6, "max": 12 },
+      "b": { "type": "range", "min": 3, "max": 8 }
+    },
+    "constraints": [
+      { "check": "a + b <= 20", "msg": "和在20以内" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a + b",
+      "unit": "只"
+    },
+    "source": "21世纪教育网·一上·20以内加法应用"
+  }
+]

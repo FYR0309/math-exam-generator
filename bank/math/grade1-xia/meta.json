@@ -1,0 +1,82 @@
+{
+  "subject": "math",
+  "subjectName": "数学",
+  "grade": 1,
+  "gradeLabel": "一年级",
+  "textbook": "冀教版2024新版",
+  "schoolYear": "2025-2026",
+  "semester": "下册",
+
+  "questionTypes": [
+    "calculation",
+    "fill_blank",
+    "true_false",
+    "choice",
+    "application"
+  ],
+
+  "defaultTemplateRatio": 0.25,
+
+  "knowledgePoints": [
+    {
+      "id": "subtract-20",
+      "name": "20以内的减法",
+      "category": "计算",
+      "difficulty": 2,
+      "subTopics": ["十几减几", "11减几", "12减几", "13、14减几", "15~18减几", "连减和加减混合"],
+      "canComboWith": ["word-problem-1step-xia"],
+      "prerequisites": ["number-11-20"]
+    },
+    {
+      "id": "classification",
+      "name": "分类（一）",
+      "category": "思维",
+      "difficulty": 1,
+      "canComboWith": [],
+      "prerequisites": []
+    },
+    {
+      "id": "number-100",
+      "name": "不超过100的数",
+      "category": "数感",
+      "difficulty": 2,
+      "subTopics": ["数的认识", "数的大小比较", "两位数加减整十数", "两位数加一位数", "两位数减一位数"],
+      "canComboWith": ["subtract-20"],
+      "prerequisites": ["number-11-20"]
+    },
+    {
+      "id": "add-sub-2digit",
+      "name": "两位数加减",
+      "category": "计算",
+      "difficulty": 3,
+      "subTopics": ["两位数加两位数（进位/不进位）", "两位数减两位数（退位/不退位）"],
+      "canComboWith": ["word-problem-1step-xia", "rmb"],
+      "prerequisites": ["number-100"]
+    },
+    {
+      "id": "rmb",
+      "name": "认识人民币",
+      "category": "应用",
+      "difficulty": 2,
+      "subTopics": ["元角分", "简单换算"],
+      "canComboWith": ["add-sub-2digit"],
+      "prerequisites": ["number-100"]
+    },
+    {
+      "id": "word-problem-1step-xia",
+      "name": "一步应用题",
+      "category": "应用",
+      "difficulty": 2,
+      "canComboWith": ["subtract-20", "add-sub-2digit"],
+      "prerequisites": ["subtract-20"]
+    },
+    {
+      "id": "explore-park-1x",
+      "name": "探索乐园",
+      "category": "思维",
+      "difficulty": 2,
+      "canComboWith": [],
+      "prerequisites": []
+    }
+  ]
+}

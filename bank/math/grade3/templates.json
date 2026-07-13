@@ -1,0 +1,287 @@
+[
+  {
+    "id": "g3-t-001",
+    "type": "application",
+    "template": "{person}去超市买了{a}千克{stuff}，每千克{b}元，又买了{c}千克{fruit}，每千克{d}元。{person}一共花了多少钱？",
+    "knowledgePoints": ["multi-digit-multiplication", "decimal-life", "word-problem-2"],
+    "difficulty": 3,
+    "errorProne": ["两步混淆", "单位遗漏"],
+    "slots": {
+      "person": { "type": "pick", "values": ["小明", "小红", "小刚", "小丽", "华华", "乐乐"] },
+      "stuff": { "type": "pick", "values": ["苹果", "梨", "香蕉", "橙子"] },
+      "fruit": { "type": "pick", "values": ["橘子", "西瓜", "桃子", "葡萄", "草莓"] },
+      "a": { "type": "range", "min": 2, "max": 9 },
+      "b": { "type": "range", "min": 3, "max": 8 },
+      "c": { "type": "range", "min": 1, "max": 7 },
+      "d": { "type": "range", "min": 3, "max": 8 }
+    },
+    "constraints": [
+      { "check": "a !== c || b !== d", "msg": "两组数据应有差异，增加区分度" },
+      { "check": "a * b <= 72", "msg": "第一组总价合理" },
+      { "check": "a * b + c * d <= 120", "msg": "总价不超过120元" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "元",
+      "steps": [
+        { "label": "{stuff}总价", "expr": "a * b", "unit": "元" },
+        { "label": "{fruit}总价", "expr": "c * d", "unit": "元" },
+        { "label": "一共花的钱", "expr": "a * b + c * d", "unit": "元" }
+      ]
+    },
+    "source": "21世纪教育网·三下·两位数乘法应用题"
+  },
+  {
+    "id": "g3-t-002",
+    "type": "application",
+    "template": "{person}买了{a}本笔记本，每本{b}元，又买了{c}支笔，每支{d}元。付了{money}元，应找回多少元？",
+    "knowledgePoints": ["multi-digit-multiplication", "decimal-life", "word-problem-2"],
+    "difficulty": 4,
+    "errorProne": ["三步混淆", "找零计算"],
+    "slots": {
+      "person": { "type": "pick", "values": ["小明", "小红", "小刚", "小丽", "华华", "乐乐"] },
+      "a": { "type": "range", "min": 2, "max": 8 },
+      "b": { "type": "range", "min": 3, "max": 10 },
+      "c": { "type": "range", "min": 1, "max": 6 },
+      "d": { "type": "range", "min": 2, "max": 8 },
+      "money": { "type": "range", "min": 50, "max": 100, "step": 10 }
+    },
+    "constraints": [
+      { "check": "a * b + c * d < money", "msg": "总花费应小于付款金额" },
+      { "check": "money - (a * b + c * d) >= 1", "msg": "至少找回1元" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "元",
+      "steps": [
+        { "label": "笔记本总价", "expr": "a * b", "unit": "元" },
+        { "label": "笔总价", "expr": "c * d", "unit": "元" },
+        { "label": "一共花费", "expr": "a * b + c * d", "unit": "元" },
+        { "label": "应找回", "expr": "money - (a * b + c * d)", "unit": "元" }
+      ]
+    },
+    "source": "21世纪教育网·三下·小数加减应用题"
+  },
+  {
+    "id": "g3-t-003",
+    "type": "application",
+    "template": "{person}看一本{book}，每天看{a}页，看了{b}天，还剩{c}页没看。这本书一共有多少页？",
+    "knowledgePoints": ["multi-digit-multiplication", "word-problem-2"],
+    "difficulty": 3,
+    "errorProne": ["乘加顺序混淆"],
+    "slots": {
+      "person": { "type": "pick", "values": ["小明", "小红", "小刚", "小丽", "聪聪"] },
+      "book": { "type": "pick", "values": ["《童话故事》", "《数学趣题》", "《科学探秘》", "《历史故事》"] },
+      "a": { "type": "range", "min": 5, "max": 18 },
+      "b": { "type": "range", "min": 3, "max": 9 },
+      "c": { "type": "range", "min": 10, "max": 50 }
+    },
+    "constraints": [
+      { "check": "a * b >= 20", "msg": "已看页数不少于20页" },
+      { "check": "a * b + c <= 200", "msg": "总页数不超过200页" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "页",
+      "steps": [
+        { "label": "已经看的页数", "expr": "a * b", "unit": "页" },
+        { "label": "这本书总页数", "expr": "a * b + c", "unit": "页" }
+      ]
+    },
+    "source": "21世纪教育网·三下·多位数乘法应用题"
+  },
+  {
+    "id": "g3-t-004",
+    "type": "application",
+    "template": "学校有{a}个学生去春游，每辆大巴坐{b}人。已经坐了{c}辆车，还需要几辆车才能全部坐下？",
+    "knowledgePoints": ["multi-digit-multiplication", "word-problem-2"],
+    "difficulty": 4,
+    "errorProne": ["余数处理", "三步分解", "进一法"],
+    "slots": {
+      "a": { "type": "range", "min": 120, "max": 300 },
+      "b": { "type": "range", "min": 30, "max": 45 },
+      "c": { "type": "range", "min": 1, "max": 4 }
+    },
+    "constraints": [
+      { "check": "c * b < a", "msg": "已坐人数应少于总人数" },
+      { "check": "a <= 300", "msg": "总人数不超过300" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "辆",
+      "steps": [
+        { "label": "已经坐了的人数", "expr": "c * b", "unit": "人" },
+        { "label": "还剩多少人", "expr": "a - c * b", "unit": "人" },
+        { "label": "还需要几辆车（进一法）", "expr": "Math.ceil((a - c * b) / b)", "unit": "辆" }
+      ]
+    },
+    "source": "21世纪教育网·三下·多位数乘法应用题"
+  },
+  {
+    "id": "g3-t-005",
+    "type": "application",
+    "template": "一本{book1} {price1}元，比一本{book2}贵 {diff}元。{person}想买一本{book1}和一本{book2}，一共需要多少元？",
+    "knowledgePoints": ["decimal-life", "word-problem-2"],
+    "difficulty": 3,
+    "errorProne": ["先求未知价格再求和"],
+    "slots": {
+      "book1": { "type": "pick", "values": ["童话书", "作文书", "故事书", "科学书"] },
+      "book2": { "type": "pick", "values": ["绘本", "漫画书", "练习册", "字帖"] },
+      "person": { "type": "pick", "values": ["小明", "小红", "小刚", "小丽", "华华", "乐乐"] },
+      "price1": { "type": "range", "min": 5, "max": 15, "step": 0.1 },
+      "diff": { "type": "range", "min": 1, "max": 5, "step": 0.1 }
+    },
+    "constraints": [
+      { "check": "price1 > diff", "msg": "贵差值应小于原价" },
+      { "check": "price1 - diff >= 1", "msg": "第二本书价格至少1元" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "元",
+      "steps": [
+        { "label": "{book2}的价格", "expr": "price1 - diff", "unit": "元" },
+        { "label": "两本书一共", "expr": "price1 + (price1 - diff)", "unit": "元" }
+      ]
+    },
+    "source": "教习网·三下·小数应用题"
+  },
+  {
+    "id": "g3-t-006",
+    "type": "application",
+    "template": "{person}参加{activity}，从{startMonth}月{startDay}日开始，到{endMonth}月{endDay}日结束。每天活动经费为{fund}元，一共需要多少元？",
+    "knowledgePoints": ["year-month-day", "multi-digit-multiplication", "word-problem-2"],
+    "difficulty": 4,
+    "errorProne": ["跨月天数计算", "起止日是否包含"],
+    "slots": {
+      "person": { "type": "pick", "values": ["天天", "乐乐", "华华", "小明"] },
+      "activity": { "type": "pick", "values": ["少年军事体验营", "科技夏令营", "英语冬令营", "篮球集训营"] },
+      "startMonth": { "type": "pick", "values": [7, 10] },
+      "startDay": { "type": "range", "min": 10, "max": 25 },
+      "endMonth": { "type": "pick", "values": [7, 8, 10, 11] },
+      "endDay": { "type": "range", "min": 10, "max": 25 },
+      "fund": { "type": "range", "min": 5, "max": 15 }
+    },
+    "constraints": [
+      { "check": "endMonth >= startMonth", "msg": "结束月份不早于开始月份" },
+      { "check": "endMonth - startMonth <= 1", "msg": "最多跨1个月" },
+      { "check": "(endMonth === startMonth && endDay > startDay) || (endMonth > startMonth)", "msg": "结束晚于开始" },
+      { "check": "endDay - startDay + 1 + (endMonth - startMonth) * 30 >= 5", "msg": "至少5天" },
+      { "check": "endDay - startDay + 1 + (endMonth - startMonth) * 30 <= 35", "msg": "不超过35天" },
+      { "check": "fund >= 5", "msg": "经费至少5元" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "元",
+      "steps": [
+        { "label": "活动天数", "expr": "endDay - startDay + 1 + (endMonth - startMonth) * 30", "unit": "天" },
+        { "label": "总经费", "expr": "(endDay - startDay + 1 + (endMonth - startMonth) * 30) * fund", "unit": "元" }
+      ]
+    },
+    "source": "21世纪教育网·三下·年月日综合应用"
+  },
+  {
+    "id": "g3-t-007",
+    "type": "application",
+    "template": "{person}{action}，从{sh}时{sm}分出发，{eh}时{em}分到达。{person}路上用了多长时间？",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["分钟够不够减", "借位"],
+    "slots": {
+      "person": { "type": "pick", "values": ["爸爸", "妈妈", "一列客车", "一辆汽车"] },
+      "action": { "type": "pick", "values": ["坐火车从甲站到乙站", "开车从北京去天津", "坐高铁从石家庄去郑州", "坐大巴从学校去公园"] },
+      "sh": { "type": "range", "min": 8, "max": 20 },
+      "sm": { "type": "range", "min": 0, "max": 50, "step": 10 },
+      "eh": { "type": "range", "min": 9, "max": 23 },
+      "em": { "type": "range", "min": 0, "max": 50, "step": 10 }
+    },
+    "constraints": [
+      { "check": "eh > sh || (eh === sh && em > sm)", "msg": "结束时刻应晚于开始时刻" },
+      { "check": "eh * 60 + em - sh * 60 - sm <= 600", "msg": "经过时间不超过10小时" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "",
+      "steps": [
+        { "label": "总共经过分钟数", "expr": "eh * 60 + em - sh * 60 - sm", "unit": "分钟" },
+        { "label": "合多少小时多少分钟", "expr": "Math.floor((eh * 60 + em - sh * 60 - sm) / 60)", "unit": "小时" }
+      ]
+    },
+    "source": "21世纪教育网·三下·24时记时法应用"
+  },
+  {
+    "id": "g3-t-008",
+    "type": "application",
+    "template": "{person}买了{a}箱饮料，每箱{b}听，每听{c}元，共花了多少元？",
+    "knowledgePoints": ["multi-digit-multiplication", "word-problem-2"],
+    "difficulty": 3,
+    "errorProne": ["连乘顺序"],
+    "slots": {
+      "person": { "type": "pick", "values": ["王老师", "张老师", "李阿姨", "刘叔叔"] },
+      "a": { "type": "range", "min": 2, "max": 5 },
+      "b": { "type": "range", "min": 12, "max": 24 },
+      "c": { "type": "range", "min": 2, "max": 5 }
+    },
+    "constraints": [
+      { "check": "a * b * c <= 500", "msg": "总花费不超过500元" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "元",
+      "steps": [
+        { "label": "一共有多少听", "expr": "a * b", "unit": "听" },
+        { "label": "一共花的钱", "expr": "a * b * c", "unit": "元" }
+      ]
+    },
+    "source": "21世纪教育网·三下·连乘应用题"
+  },
+  {
+    "id": "g3-t-009",
+    "type": "application",
+    "template": "学校食堂原来有大米{a}千克，又运来{b}袋，每袋{c}千克。现在食堂共有多少千克大米？",
+    "knowledgePoints": ["multi-digit-multiplication", "word-problem-2"],
+    "difficulty": 3,
+    "errorProne": ["乘加顺序"],
+    "slots": {
+      "a": { "type": "range", "min": 200, "max": 500 },
+      "b": { "type": "range", "min": 10, "max": 20 },
+      "c": { "type": "range", "min": 15, "max": 30 }
+    },
+    "constraints": [
+      { "check": "a + b * c <= 1200", "msg": "总重量不超过1200千克" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "千克",
+      "steps": [
+        { "label": "新运来的大米", "expr": "b * c", "unit": "千克" },
+        { "label": "现在食堂共有", "expr": "a + b * c", "unit": "千克" }
+      ]
+    },
+    "source": "21世纪教育网·三下·乘法应用题"
+  },
+  {
+    "id": "g3-t-010",
+    "type": "application",
+    "template": "一套{product} {price1}元，{person}付了100元，应找回多少元？",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 2,
+    "errorProne": ["退位"],
+    "slots": {
+      "product": { "type": "pick", "values": ["羽毛球拍", "篮球", "足球", "书包", "学习机"] },
+      "person": { "type": "pick", "values": ["李老师", "张老师", "王阿姨", "刘叔叔", "小明"] },
+      "price1": { "type": "range", "min": 15, "max": 95, "step": 0.5 }
+    },
+    "constraints": [
+      { "check": "price1 < 100", "msg": "商品价格应小于100元" },
+      { "check": "100 - price1 >= 0.5", "msg": "至少找回0.5元" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "元",
+      "steps": [
+        { "label": "应找回", "expr": "100 - price1", "unit": "元" }
+      ]
+    },
+    "source": "教习网·三下·小数减法应用"
+  }
+]

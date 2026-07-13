@@ -1,0 +1,140 @@
+[
+  {
+    "id": "g1x-t-001",
+    "type": "application",
+    "template": "树上有 {a} 只小鸟，飞走了 {b} 只，还剩几只？",
+    "knowledgePoints": ["subtract-20", "word-problem-1step-xia"],
+    "difficulty": 1,
+    "errorProne": [],
+    "slots": {
+      "a": { "type": "range", "min": 8, "max": 18 },
+      "b": { "type": "range", "min": 2, "max": 9 }
+    },
+    "constraints": [
+      { "check": "a > b", "msg": "原有数量应大于飞走数量" },
+      { "check": "a - b >= 1", "msg": "至少剩1只" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a - b",
+      "unit": "只"
+    },
+    "source": "21世纪教育网·一下·减法应用"
+  },
+  {
+    "id": "g1x-t-002",
+    "type": "application",
+    "template": "哥哥有 {a} 块糖，弟弟有 {b} 块糖，哥哥比弟弟多几块？",
+    "knowledgePoints": ["subtract-20", "word-problem-1step-xia"],
+    "difficulty": 2,
+    "errorProne": ["比多比少混淆"],
+    "slots": {
+      "a": { "type": "range", "min": 8, "max": 18 },
+      "b": { "type": "range", "min": 3, "max": 10 }
+    },
+    "constraints": [
+      { "check": "a > b", "msg": "哥哥的糖应多于弟弟" },
+      { "check": "a - b >= 1", "msg": "差值至少1" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a - b",
+      "unit": "块"
+    },
+    "source": "21世纪教育网·一下·比较应用"
+  },
+  {
+    "id": "g1x-t-003",
+    "type": "application",
+    "template": "妈妈买了 {a} 个鸡蛋，吃了 {b} 个，又买了 {c} 个，现在有几个鸡蛋？",
+    "knowledgePoints": ["subtract-20", "word-problem-1step-xia"],
+    "difficulty": 3,
+    "errorProne": ["两步顺序混淆"],
+    "slots": {
+      "a": { "type": "range", "min": 10, "max": 20 },
+      "b": { "type": "range", "min": 2, "max": 8 },
+      "c": { "type": "range", "min": 3, "max": 10 }
+    },
+    "constraints": [
+      { "check": "a > b", "msg": "原有数量应大于吃掉数量" },
+      { "check": "a - b + c <= 30", "msg": "结果不超过30" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "个",
+      "steps": [
+        { "label": "吃了之后剩下", "expr": "a - b", "unit": "个" },
+        { "label": "又买了之后一共", "expr": "a - b + c", "unit": "个" }
+      ]
+    },
+    "source": "21世纪教育网·一下·两步应用"
+  },
+  {
+    "id": "g1x-t-004",
+    "type": "application",
+    "template": "苹果树有 {a} 棵，桃树有 {b} 棵，果园里一共有多少棵果树？",
+    "knowledgePoints": ["add-sub-2digit", "word-problem-1step-xia"],
+    "difficulty": 2,
+    "errorProne": [],
+    "slots": {
+      "a": { "type": "range", "min": 20, "max": 50 },
+      "b": { "type": "range", "min": 10, "max": 40 }
+    },
+    "constraints": [
+      { "check": "a + b <= 99", "msg": "和在100以内" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a + b",
+      "unit": "棵"
+    },
+    "source": "21世纪教育网·一下·两位数加法应用"
+  },
+  {
+    "id": "g1x-t-005",
+    "type": "application",
+    "template": "亮亮摘了 {a} 个桃子，红红摘了 {b} 个，他们一共摘了多少个？",
+    "knowledgePoints": ["add-sub-2digit", "word-problem-1step-xia"],
+    "difficulty": 2,
+    "errorProne": [],
+    "slots": {
+      "a": { "type": "range", "min": 30, "max": 60 },
+      "b": { "type": "range", "min": 20, "max": 40 }
+    },
+    "constraints": [
+      { "check": "a + b <= 99", "msg": "和在100以内" }
+    ],
+    "answer": {
+      "type": "expression",
+      "expr": "a + b",
+      "unit": "个"
+    },
+    "source": "21世纪教育网·一下·两位数加法应用"
+  },
+  {
+    "id": "g1x-t-006",
+    "type": "application",
+    "template": "幼儿园有 {a} 名小朋友，有 {b} 个红苹果和 {c} 个青苹果，每人分一个够吗？",
+    "knowledgePoints": ["add-sub-2digit", "word-problem-1step-xia"],
+    "difficulty": 3,
+    "errorProne": ["先求和再比较"],
+    "slots": {
+      "a": { "type": "range", "min": 50, "max": 80 },
+      "b": { "type": "range", "min": 30, "max": 50 },
+      "c": { "type": "range", "min": 20, "max": 40 }
+    },
+    "constraints": [
+      { "check": "b + c >= a - 5 && b + c <= a + 10", "msg": "苹果总数在人数附近，才有比较意义" }
+    ],
+    "answer": {
+      "type": "steps",
+      "unit": "",
+      "steps": [
+        { "label": "苹果总数", "expr": "b + c", "unit": "个" },
+        { "label": "比较结果", "expr": "b + c >= a ? '够' : '不够'", "unit": "" }
+      ]
+    },
+    "source": "21世纪教育网·一下·综合比较应用",
+    "_note": "答案表达式包含三元判断，引擎需支持"
+  }
+]

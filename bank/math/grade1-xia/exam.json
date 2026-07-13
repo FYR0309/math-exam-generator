@@ -1,0 +1,73 @@
+{
+  "title": "冀教版一年级下册数学期末测试卷",
+  "totalScore": 100,
+  "duration": 60,
+  "headerFields": ["班级____", "姓名____", "得分____"],
+
+  "sections": [
+    {
+      "name": "一、填空题",
+      "instruction": "（每空1分，共24分）",
+      "totalPoints": 24,
+      "items": [
+        { "count": 6, "type": "fill_blank", "pointsEach": 2, "knowledgePoints": ["number-100", "subtract-20"], "sourceType": "static" },
+        { "count": 4, "type": "fill_blank", "pointsEach": 2, "knowledgePoints": ["add-sub-2digit", "rmb"], "sourceType": "static" },
+        { "count": 2, "type": "fill_blank", "pointsEach": 2, "knowledgePoints": ["classification"], "sourceType": "static" }
+      ]
+    },
+    {
+      "name": "二、选择题",
+      "instruction": "（将正确答案的序号填在括号里。每题2分，共10分）",
+      "totalPoints": 10,
+      "items": [
+        { "count": 5, "type": "choice", "pointsEach": 2, "knowledgePoints": ["number-100", "add-sub-2digit", "rmb", "classification"], "sourceType": "static" }
+      ]
+    },
+    {
+      "name": "三、计算题",
+      "instruction": "（共24分）",
+      "totalPoints": 24,
+      "subSections": [
+        {
+          "name": "1. 直接写得数",
+          "instruction": "（每题1分，共12分）",
+          "items": [
+            { "count": 6, "type": "calculation", "pointsEach": 1, "knowledgePoints": ["subtract-20"], "sourceType": "static" },
+            { "count": 6, "type": "calculation", "pointsEach": 1, "knowledgePoints": ["add-sub-2digit", "number-100"], "sourceType": "static" }
+          ]
+        },
+        {
+          "name": "2. 用竖式计算",
+          "instruction": "（每题3分，共12分）",
+          "items": [
+            { "count": 4, "type": "calculation", "pointsEach": 3, "knowledgePoints": ["add-sub-2digit"], "sourceType": "static" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "四、按要求做题",
+      "instruction": "（共11分）",
+      "totalPoints": 11,
+      "items": [
+        { "count": 3, "type": "true_false", "pointsEach": 2, "knowledgePoints": ["classification", "number-100"], "sourceType": "static" },
+        { "count": 1, "type": "fill_blank", "pointsEach": 5, "knowledgePoints": ["rmb"], "sourceType": "template" }
+      ]
+    },
+    {
+      "name": "五、解决问题",
+      "instruction": "（第1-3题每题5分，第4-5题每题8分，共31分）",
+      "totalPoints": 31,
+      "items": [
+        { "count": 1, "type": "application", "pointsEach": 5, "knowledgePoints": ["subtract-20", "word-problem-1step-xia"], "sourceType": "template" },
+        { "count": 2, "type": "application", "pointsEach": 5, "knowledgePoints": ["add-sub-2digit", "word-problem-1step-xia"], "sourceType": "template" },
+        { "count": 2, "type": "application", "pointsEach": 8, "knowledgePoints": ["add-sub-2digit", "subtract-20", "word-problem-1step-xia"], "sourceType": "template" }
+      ]
+    }
+  ],
+
+  "_notes": {
+    "操作题": "真实考试中有画图形、拨钟表等操作题，本卷用分类判断题+人民币模板题替代",
+    "选择题": "目前一年级题库中选择题较少，如不足会从填空/判断题转换"
+  }
+}

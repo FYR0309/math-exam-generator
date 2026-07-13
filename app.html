@@ -1,0 +1,3542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小学数学出卷工具</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;color:#333;min-height:100vh}
+.header{background:#1a73e8;color:#fff;padding:14px 24px;text-align:center}
+.header h1{font-size:22px;font-weight:600}
+.header p{font-size:13px;opacity:.85;margin-top:2px}
+.container{max-width:960px;margin:0 auto;padding:16px}
+.controls{background:#fff;border-radius:10px;padding:18px 22px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.control-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:12px}
+.control-row:last-child{margin-bottom:0}
+.control-label{font-size:14px;font-weight:600;min-width:55px;color:#555}
+select,input[type=number]{padding:7px 10px;border:1px solid #d0d5dd;border-radius:6px;font-size:14px;background:#fff}
+select{min-width:155px}
+input[type=number]{width:70px}
+
+/* 模式切换 */
+.mode-switch{display:inline-flex;background:#e8eaed;border-radius:8px;padding:3px}
+.mode-btn{padding:7px 16px;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#666;transition:all .2s}
+.mode-btn.active{background:#fff;color:#1a73e8;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+/* 知识点 */
+.kp-tags{display:flex;flex-wrap:wrap;gap:8px}
+.kp-tag{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #d0d5dd;border-radius:18px;font-size:12px;cursor:pointer;user-select:none;transition:all .2s;background:#fff}
+.kp-tag:hover{border-color:#1a73e8}
+.kp-tag.active{background:#e8f0fe;border-color:#1a73e8;color:#1a73e8;font-weight:600}
+
+/* 滑块 */
+.slider-group{display:flex;align-items:center;gap:10px;flex:1;min-width:180px}
+.slider-group input[type=range]{flex:1;accent-color:#1a73e8}
+.slider-val{font-weight:700;color:#1a73e8;min-width:38px;text-align:center;font-size:14px}
+
+/* 按钮 */
+.btn{padding:9px 20px;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:#1a73e8;color:#fff}
+.btn-primary:hover{background:#1557b0}
+.btn-secondary{background:#fff;color:#1a73e8;border:1.5px solid #1a73e8}
+.btn-secondary:hover{background:#e8f0fe}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;margin-top:4px}
+
+/* 试卷信息行 */
+.exam-info{display:flex;gap:20px;font-size:13px;color:#1a73e8;font-weight:600;margin-bottom:10px}
+
+/* 预览 */
+.preview{background:#fff;border-radius:10px;padding:30px 34px;box-shadow:0 1px 4px rgba(0,0,0,.08);font-size:15px;line-height:1.9;display:none}
+.preview.show{display:block}
+.paper-title{text-align:center;font-size:20px;font-weight:700;margin-bottom:2px}
+.paper-subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:6px}
+.paper-meta{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:14px;border-bottom:1px dashed #e0e0e0;padding-bottom:8px}
+.section-title{font-size:16px;font-weight:700;margin:18px 0 8px;padding:6px 10px;background:#f5f7fa;border-radius:4px}
+.section-inst{font-size:12px;color:#888;margin-bottom:8px}
+.subsection-title{font-size:14px;font-weight:600;margin:10px 0 4px}
+.question-item{margin-bottom:12px;padding:8px 0;border-bottom:1px dotted #f0f0f0}
+.q-index{font-weight:700;color:#1a73e8;margin-right:4px}
+.q-type{font-size:11px;color:#999;margin-left:2px}
+.q-points{font-size:11px;color:#e67e22;float:right}
+.q-text{margin:3px 0}
+.q-options{margin:3px 0 3px 18px;color:#555}
+.q-answer-line{color:#999;font-size:12px}
+.subsection-title{font-weight:600;color:#555;margin:10px 0 4px}
+.warning{background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:8px 14px;margin-bottom:10px;font-size:13px;color:#856404;display:none}
+.warning.show{display:block}
+
+/* 套卷特有样式 */
+.exam-header-line{display:flex;justify-content:space-between;font-size:12px;color:#666;border:2px solid #333;padding:8px 12px;margin-bottom:16px}
+.exam-header-line span{font-weight:600}
+.total-score-row{text-align:right;font-size:13px;color:#e67e22;margin-top:16px;border-top:1px solid #ddd;padding-top:8px;font-weight:600}
+
+@media(max-width:600px){.container{padding:8px}.controls{padding:12px}.preview{padding:16px}.header h1{font-size:18px}}
+</style>
+</head>
+<body>
+
+<div class="header"><h1>📐 小学数学出卷工具</h1><p id="headerSubtitle">冀教版2024新版</p></div>
+
+<div class="container">
+<div class="controls">
+  <div class="control-row">
+    <span class="control-label">模式</span>
+    <div class="mode-switch">
+      <button class="mode-btn active" data-mode="free" id="modeFree">📝 自由组卷</button>
+      <button class="mode-btn" data-mode="exam" id="modeExam">📋 套卷模式</button>
+    </div>
+    <span class="control-label" style="margin-left:8px">年级</span>
+    <select id="gradeSelect"><option value="">-- 请选择 --</option></select>
+    <span id="examInfoBox" class="exam-info" style="display:none"></span>
+  </div>
+
+  <!-- 自由组卷专属 -->
+  <div id="freeModeControls">
+    <div class="control-row">
+      <span class="control-label">知识点</span>
+      <div class="kp-tags" id="kpTags"><span style="color:#999;font-size:13px">请先选择年级</span></div>
+    </div>
+    <div class="control-row">
+      <span class="control-label">总题数</span>
+      <input type="number" id="totalQuestions" value="15" min="1" max="100">
+      <span class="control-label" style="margin-left:8px">模板比例</span>
+      <div class="slider-group">
+        <span style="font-size:11px;color:#999">静态</span>
+        <input type="range" id="templateRatio" value="50" min="0" max="100" step="10">
+        <span style="font-size:11px;color:#999">模板</span>
+        <span class="slider-val" id="ratioVal">50%</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <span class="control-label">难度</span>
+      <input type="number" id="diffMin" value="1" min="1" max="5" style="width:55px">
+      <span>~</span><input type="number" id="diffMax" value="5" min="1" max="5" style="width:55px">
+    </div>
+  </div>
+
+  <!-- 套卷专属 -->
+  <div id="examModeControls" style="display:none">
+    <div class="control-row">
+      <span class="control-label">年级</span>
+      <span id="examGradeLabel" style="font-size:14px;color:#555">--</span>
+      <span style="font-size:13px;color:#999">（自动匹配期末试卷结构）</span>
+    </div>
+  </div>
+
+  <div class="warning" id="warning"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btnGenerate">🎲 生成试卷</button>
+    <button class="btn btn-secondary" id="btnDownload" disabled>📥 下载Word</button>
+    <button class="btn btn-secondary" id="btnPrint" disabled>🖨 打印</button>
+  </div>
+</div>
+
+<div class="preview" id="preview"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  引擎代码（内联）
+// ═══════════════════════════════════════════
+
+class Filler{constructor(o){this.maxRetries=(o&&o.maxRetries)||200}
+fill(t){for(let a=0;a<this.maxRetries;a++){let s=this._fs(t.slots);if(this._cc(t.constraints,s)){let q=this._r(t.template,s),ans=this._ca(t.answer,s);return{id:t.id,type:t.type,question:q,knowledgePoints:t.knowledgePoints,difficulty:t.difficulty,errorProne:t.errorProne,slots:s,answer:ans,source:t.source||''}}}throw new Error('填充失败:'+t.id)}
+fillBatch(t,n){let r=[],seen=new Set();for(let i=0;i<n*50&&r.length<n;i++){try{let q=this.fill(t);if(!seen.has(q.question)){seen.add(q.question);r.push(q)}}catch(e){}}return r}
+_fs(d){let s={};for(let[k,v]of Object.entries(d)){if(v.type==='range'){let st=v.step||1,steps=Math.floor((v.max-v.min)/st);let val=v.min+Math.floor(Math.random()*(steps+1))*st;if(st<1){let dc=String(st).split('.')[1]?.length||0;val=parseFloat(val.toFixed(dc))}s[k]=val}else if(v.type==='pick'){s[k]=v.values[Math.floor(Math.random()*v.values.length)]}}for(let[k,v]of Object.entries(d)){if(v.type==='computed')s[k]=this._ev(v.expr,s)}return s}
+_cc(c,s){if(!c||c.length===0)return true;for(let x of c){try{if(!this._ev(x.check,s))return false}catch(e){return false}}return true}
+_ev(e,s){let ks=Object.keys(s),vs=Object.values(s);let fn=new Function(...ks,'_M','_pI','_pF','return ('+e+');');let r=fn(...vs,Math,parseInt,parseFloat);if(typeof r==='number'&&!Number.isInteger(r))return parseFloat(r.toFixed(10));return r}
+_r(t,s){return t.replace(/\{(\w+)\}/g,(m,n)=>s[n]!==undefined?String(s[n]):m)}
+_ca(d,s){if(!d)return{finalAnswer:'',steps:[]};if(d.type==='expression'){let v=this._ev(d.expr,s);return{finalAnswer:d.unit?v+d.unit:String(v),steps:[]}}if(d.type==='steps'){let st=d.steps.map(x=>{let l=this._r(x.label,s),v=this._ev(x.expr,s);return{label:l,value:x.unit?v+x.unit:String(v)}});return{finalAnswer:st[st.length-1]?.value||'',steps:st}}return{finalAnswer:'',steps:[]}}}
+
+class Generator{constructor(o){this.filler=(o&&o.filler)||new Filler()}
+generate(o){let{meta:m,staticQuestions:sq,templates:tp,totalQuestions:tq,templateRatio:tr,knowledgePoints:kp,difficultyRange:dr,title:ti}=o;let[dMin,dMax]=dr||[1,5];let fs=(sq||[]).filter(q=>q.difficulty>=dMin&&q.difficulty<=dMax),ft=(tp||[]).filter(t=>t.difficulty>=dMin&&t.difficulty<=dMax);if((kp||[]).length>0){fs=fs.filter(q=>q.knowledgePoints.some(k=>kp.includes(k)));ft=ft.filter(t=>t.knowledgePoints.some(k=>kp.includes(k)))}let tc=Math.round((tq||20)*(tr||.5)),sc=(tq||20)-tc;if(tc>ft.length){sc=Math.min(sc+tc-ft.length,fs.length);tc=ft.length}if(sc>fs.length){tc=Math.min(tc+sc-fs.length,ft.length);sc=fs.length}let ps=this._pk(fs,sc),pt=this._pk(ft,tc),filled=[];for(let t of pt){try{let f=this.filler.fill(t);filled.push({type:f.type,question:f.question,answer:f.answer,difficulty:f.difficulty,knowledgePoints:f.knowledgePoints,source:'template'})}catch(e){}}let qs=[...ps.map(q=>({type:q.type,question:q.question,options:q.options||[],answer:(typeof q.answer==='string')?{finalAnswer:q.answer,steps:[]}:(q.answer||{finalAnswer:'',steps:[]}),difficulty:q.difficulty,knowledgePoints:q.knowledgePoints,source:'static'})),...filled];qs=this._st(this._sh(qs));qs.forEach((q,i)=>q.index=i+1);return{title:ti||((m?m.subjectName:'数学')+'练习题'),subtitle:m?[m.gradeLabel,m.semester,m.textbook].filter(Boolean).join(' · '):'',config:{totalQuestions:qs.length,templateRatio:tr,templateCount:filled.length,staticCount:ps.length,knowledgePoints:kp||[],difficultyRange:[dMin,dMax]},questions:qs,answerKey:qs.map(q=>({index:q.index,answer:q.answer.finalAnswer,steps:q.answer.steps||[]}))}}
+generateExam(o){let{exam:e,meta:m,staticQuestions:sq,templates:tp}=o,questions=[],qIdx=0,sections=[];for(let sec of e.sections){let secQs=[],renderedSubs=[];if(sec.subSections){for(let sub of sec.subSections){let subQs=[];for(let it of(sub.items||[])){let pk=this._peq(it,sq,tp,qIdx);pk.forEach(q=>{qIdx++;q.index=qIdx;subQs.push(q);secQs.push(q)})}renderedSubs.push({name:sub.name,instruction:sub.instruction||'',questions:subQs})}}else{for(let it of(sec.items||[])){let pk=this._peq(it,sq,tp,qIdx);pk.forEach(q=>{qIdx++;q.index=qIdx;secQs.push(q)})}}questions.push(...secQs);sections.push({name:sec.name,instruction:sec.instruction||'',totalPoints:sec.totalPoints||0,subSections:renderedSubs.length>0?renderedSubs:null,questions:renderedSubs.length>0?[]:secQs})}return{title:e.title||(m.subjectName+'期末测试卷'),subtitle:[m.gradeLabel,m.semester,m.textbook].filter(Boolean).join(' · '),totalScore:e.totalScore||100,duration:e.duration||60,headerFields:e.headerFields||['班级____','姓名____','得分____'],generatedAt:new Date().toISOString(),mode:'exam',sections,questions,answerKey:questions.map(q=>({index:q.index,points:q.points,answer:q.answer.finalAnswer,steps:q.answer.steps||[]}))}}
+_peq(it,sq,tp,si){let{count:c,type:t,pointsEach:pt,knowledgePoints:kp,sourceType:st}=it,pool=[];if(st==='static')pool=(sq||[]).filter(q=>q.type===t);else if(st==='template')pool=(tp||[]).filter(x=>x.type===t);else{pool=[...((sq||[]).filter(q=>q.type===t)),...((tp||[]).filter(x=>x.type===t))]}if(kp&&kp.length>0)pool=pool.filter(q=>q.knowledgePoints.some(k=>kp.includes(k)));let picked=this._pk(pool,c),results=[];for(let q of picked){if(q.template!==undefined){try{let f=this.filler.fill(q);results.push({type:f.type,question:f.question,options:q.options||[],answer:f.answer,difficulty:f.difficulty,points:pt,source:'template'})}catch(e){}}else{results.push({type:q.type,question:q.question,options:q.options||[],answer:(typeof q.answer==='string')?{finalAnswer:q.answer,steps:[]}:(q.answer||{finalAnswer:'',steps:[]}),difficulty:q.difficulty,points:pt,source:'static'})}}return results}
+_pk(a,n){if(n<=0)return[];if(n>=a.length)return[...a];let r=[...a];for(let i=0;i<n;i++){let j=i+Math.floor(Math.random()*(r.length-i));[r[i],r[j]]=[r[j],r[i]]}return r.slice(0,n)}
+_sh(a){let r=[...a];for(let i=r.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+_st(q){return q.sort((a,b)=>a.difficulty!==b.difficulty?a.difficulty-b.difficulty:Math.random()-.5)}}
+
+// ═══════════════════════════════════════════
+//  题库数据
+// ═══════════════════════════════════════════
+
+const BANK = {
+  "grade1-shang": {
+    "meta": {
+      "subject": "math",
+      "subjectName": "数学",
+      "grade": 1,
+      "gradeLabel": "一年级",
+      "textbook": "冀教版2024新版",
+      "schoolYear": "2025-2026",
+      "semester": "上册",
+      "questionTypes": [
+        "calculation",
+        "fill_blank",
+        "true_false",
+        "choice",
+        "application"
+      ],
+      "defaultTemplateRatio": 0.2,
+      "knowledgePoints": [
+        {
+          "id": "number-1-9",
+          "name": "认识1~9",
+          "category": "数感",
+          "difficulty": 1,
+          "subTopics": [
+            "数的意义",
+            "几个和第几个",
+            "合与分",
+            "0的认识和加减",
+            "10的认识和加减"
+          ],
+          "canComboWith": [],
+          "prerequisites": []
+        },
+        {
+          "id": "add-sub-10",
+          "name": "10以内的加减",
+          "category": "计算",
+          "difficulty": 1,
+          "canComboWith": [
+            "word-problem-1step"
+          ],
+          "prerequisites": [
+            "number-1-9"
+          ]
+        },
+        {
+          "id": "shapes-3d",
+          "name": "认识图形（一）",
+          "category": "几何",
+          "difficulty": 1,
+          "subTopics": [
+            "长方体",
+            "正方体",
+            "圆柱",
+            "球"
+          ],
+          "canComboWith": [],
+          "prerequisites": []
+        },
+        {
+          "id": "number-11-20",
+          "name": "认识11~20",
+          "category": "数感",
+          "difficulty": 1,
+          "subTopics": [
+            "数的认识",
+            "10加几和相应的减法"
+          ],
+          "canComboWith": [
+            "add-20"
+          ],
+          "prerequisites": [
+            "number-1-9"
+          ]
+        },
+        {
+          "id": "add-20",
+          "name": "20以内的加法",
+          "category": "计算",
+          "difficulty": 2,
+          "subTopics": [
+            "十几加几",
+            "9加几",
+            "8加几",
+            "7、6加几",
+            "连加"
+          ],
+          "canComboWith": [
+            "word-problem-1step"
+          ],
+          "prerequisites": [
+            "add-sub-10",
+            "number-11-20"
+          ]
+        },
+        {
+          "id": "word-problem-1step",
+          "name": "一步应用题",
+          "category": "应用",
+          "difficulty": 2,
+          "canComboWith": [
+            "add-sub-10",
+            "add-20"
+          ],
+          "prerequisites": [
+            "add-sub-10"
+          ]
+        },
+        {
+          "id": "explore-park-1s",
+          "name": "探索乐园",
+          "category": "思维",
+          "difficulty": 2,
+          "canComboWith": [],
+          "prerequisites": []
+        }
+      ]
+    },
+    "staticQuestions": [
+      {
+        "id": "g1s-s-001",
+        "type": "calculation",
+        "question": "3 + 5 = ？",
+        "answer": "8",
+        "knowledgePoints": [
+          "add-sub-10"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网·一上第一单元"
+      },
+      {
+        "id": "g1s-s-002",
+        "type": "calculation",
+        "question": "8 - 3 = ？",
+        "answer": "5",
+        "knowledgePoints": [
+          "add-sub-10"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-003",
+        "type": "calculation",
+        "question": "6 + 4 = ？",
+        "answer": "10",
+        "knowledgePoints": [
+          "add-sub-10"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-004",
+        "type": "calculation",
+        "question": "10 - 7 = ？",
+        "answer": "3",
+        "knowledgePoints": [
+          "add-sub-10"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-005",
+        "type": "fill_blank",
+        "question": "9可以分成4和____，也可以分成____和3。",
+        "answer": "5, 6",
+        "knowledgePoints": [
+          "number-1-9"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-006",
+        "type": "fill_blank",
+        "question": "在〇里填上 >、< 或 =：7 〇 10，5 〇 2，9 〇 9。",
+        "answer": "<, >, =",
+        "knowledgePoints": [
+          "number-1-9"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-007",
+        "type": "fill_blank",
+        "question": "1个十和6个一是____，18里面有____个十和____个一。",
+        "answer": "16, 1, 8",
+        "knowledgePoints": [
+          "number-11-20"
+        ],
+        "difficulty": 1,
+        "errorProne": [
+          "数位理解"
+        ],
+        "source": "21世纪教育网·一上第三单元"
+      },
+      {
+        "id": "g1s-s-008",
+        "type": "fill_blank",
+        "question": "10 + 3 = ____，17 - 7 = ____，13 - 10 = ____。",
+        "answer": "13, 10, 3",
+        "knowledgePoints": [
+          "number-11-20"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-009",
+        "type": "fill_blank",
+        "question": "11, ( ), 13, ( ), ( ), 16, ( ), 18, ( ), ( )",
+        "answer": "12, 14, 15, 17, 19, 20",
+        "knowledgePoints": [
+          "number-11-20"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-010",
+        "type": "choice",
+        "question": "哪个图形是正方体？",
+        "options": [
+          "A. 长长方方，对面一样大",
+          "B. 正正方方，每个面都一样",
+          "C. 直直的上下一样粗",
+          "D. 可以任意滚动"
+        ],
+        "answer": "B",
+        "knowledgePoints": [
+          "shapes-3d"
+        ],
+        "difficulty": 1,
+        "errorProne": [
+          "长方体和正方体混淆"
+        ],
+        "source": "21世纪教育网·一上第二单元"
+      },
+      {
+        "id": "g1s-s-011",
+        "type": "choice",
+        "question": "哪个图形可以任意滚动？",
+        "options": [
+          "A. 长方体",
+          "B. 正方体",
+          "C. 圆柱",
+          "D. 球"
+        ],
+        "answer": "D",
+        "knowledgePoints": [
+          "shapes-3d"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-012",
+        "type": "true_false",
+        "question": "圆柱上下两个面大小一样。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "shapes-3d"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-013",
+        "type": "true_false",
+        "question": "长方体有6个面，每个面都是长方形。（ ）",
+        "answer": "×",
+        "knowledgePoints": [
+          "shapes-3d"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "正方体也是长方体的一种"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-014",
+        "type": "calculation",
+        "question": "9 + 3 = ？",
+        "answer": "12",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "凑十法"
+        ],
+        "source": "21世纪教育网·一上第四单元"
+      },
+      {
+        "id": "g1s-s-015",
+        "type": "calculation",
+        "question": "8 + 7 = ？",
+        "answer": "15",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "凑十法"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-016",
+        "type": "calculation",
+        "question": "7 + 6 = ？",
+        "answer": "13",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-017",
+        "type": "calculation",
+        "question": "6 + 5 = ？",
+        "answer": "11",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-018",
+        "type": "calculation",
+        "question": "3 + 4 + 6 = ？",
+        "answer": "13",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "连加顺序"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-019",
+        "type": "calculation",
+        "question": "8 + 2 + 9 = ？",
+        "answer": "19",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1s-s-020",
+        "type": "fill_blank",
+        "question": "15 + 3 = ____，表示____个十和____个一加3个一，等于____个十和____个一。",
+        "answer": "18, 1, 5, 1, 8",
+        "knowledgePoints": [
+          "add-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "数位理解"
+        ],
+        "source": "21世纪教育网"
+      }
+    ],
+    "templates": [
+      {
+        "id": "g1s-t-001",
+        "type": "application",
+        "template": "小明有 {a} 个苹果，妈妈又给他 {b} 个，小明现在有多少个苹果？",
+        "knowledgePoints": [
+          "add-sub-10",
+          "word-problem-1step"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 3,
+            "max": 7
+          },
+          "b": {
+            "type": "range",
+            "min": 2,
+            "max": 5
+          }
+        },
+        "constraints": [
+          {
+            "check": "a + b <= 10",
+            "msg": "和在10以内"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a + b",
+          "unit": "个"
+        },
+        "source": "21世纪教育网·一上·一步加法应用"
+      },
+      {
+        "id": "g1s-t-002",
+        "type": "application",
+        "template": "小明有 {a} 个苹果，吃了 {b} 个，还剩几个？",
+        "knowledgePoints": [
+          "add-sub-10",
+          "word-problem-1step"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 5,
+            "max": 10
+          },
+          "b": {
+            "type": "range",
+            "min": 1,
+            "max": 5
+          }
+        },
+        "constraints": [
+          {
+            "check": "a > b",
+            "msg": "原有数量应大于吃掉数量"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a - b",
+          "unit": "个"
+        },
+        "source": "21世纪教育网·一上·一步减法应用"
+      },
+      {
+        "id": "g1s-t-003",
+        "type": "application",
+        "template": "池塘里有 {a} 只鸭子，又游来了 {b} 只，现在一共有多少只鸭子？",
+        "knowledgePoints": [
+          "add-20",
+          "word-problem-1step"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 6,
+            "max": 12
+          },
+          "b": {
+            "type": "range",
+            "min": 3,
+            "max": 8
+          }
+        },
+        "constraints": [
+          {
+            "check": "a + b <= 20",
+            "msg": "和在20以内"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a + b",
+          "unit": "只"
+        },
+        "source": "21世纪教育网·一上·20以内加法应用"
+      }
+    ],
+    "exam": null
+  },
+  "grade1-xia": {
+    "meta": {
+      "subject": "math",
+      "subjectName": "数学",
+      "grade": 1,
+      "gradeLabel": "一年级",
+      "textbook": "冀教版2024新版",
+      "schoolYear": "2025-2026",
+      "semester": "下册",
+      "questionTypes": [
+        "calculation",
+        "fill_blank",
+        "true_false",
+        "choice",
+        "application"
+      ],
+      "defaultTemplateRatio": 0.25,
+      "knowledgePoints": [
+        {
+          "id": "subtract-20",
+          "name": "20以内的减法",
+          "category": "计算",
+          "difficulty": 2,
+          "subTopics": [
+            "十几减几",
+            "11减几",
+            "12减几",
+            "13、14减几",
+            "15~18减几",
+            "连减和加减混合"
+          ],
+          "canComboWith": [
+            "word-problem-1step-xia"
+          ],
+          "prerequisites": [
+            "number-11-20"
+          ]
+        },
+        {
+          "id": "classification",
+          "name": "分类（一）",
+          "category": "思维",
+          "difficulty": 1,
+          "canComboWith": [],
+          "prerequisites": []
+        },
+        {
+          "id": "number-100",
+          "name": "不超过100的数",
+          "category": "数感",
+          "difficulty": 2,
+          "subTopics": [
+            "数的认识",
+            "数的大小比较",
+            "两位数加减整十数",
+            "两位数加一位数",
+            "两位数减一位数"
+          ],
+          "canComboWith": [
+            "subtract-20"
+          ],
+          "prerequisites": [
+            "number-11-20"
+          ]
+        },
+        {
+          "id": "add-sub-2digit",
+          "name": "两位数加减",
+          "category": "计算",
+          "difficulty": 3,
+          "subTopics": [
+            "两位数加两位数（进位/不进位）",
+            "两位数减两位数（退位/不退位）"
+          ],
+          "canComboWith": [
+            "word-problem-1step-xia",
+            "rmb"
+          ],
+          "prerequisites": [
+            "number-100"
+          ]
+        },
+        {
+          "id": "rmb",
+          "name": "认识人民币",
+          "category": "应用",
+          "difficulty": 2,
+          "subTopics": [
+            "元角分",
+            "简单换算"
+          ],
+          "canComboWith": [
+            "add-sub-2digit"
+          ],
+          "prerequisites": [
+            "number-100"
+          ]
+        },
+        {
+          "id": "word-problem-1step-xia",
+          "name": "一步应用题",
+          "category": "应用",
+          "difficulty": 2,
+          "canComboWith": [
+            "subtract-20",
+            "add-sub-2digit"
+          ],
+          "prerequisites": [
+            "subtract-20"
+          ]
+        },
+        {
+          "id": "explore-park-1x",
+          "name": "探索乐园",
+          "category": "思维",
+          "difficulty": 2,
+          "canComboWith": [],
+          "prerequisites": []
+        }
+      ]
+    },
+    "staticQuestions": [
+      {
+        "id": "g1x-s-001",
+        "type": "calculation",
+        "question": "12 - 4 = ？",
+        "answer": "8",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "退位减法"
+        ],
+        "source": "21世纪教育网·一下第一单元"
+      },
+      {
+        "id": "g1x-s-002",
+        "type": "calculation",
+        "question": "15 - 8 = ？",
+        "answer": "7",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "破十法"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-003",
+        "type": "calculation",
+        "question": "13 - 7 = ？",
+        "answer": "6",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-004",
+        "type": "calculation",
+        "question": "17 - 9 = ？",
+        "answer": "8",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "破十法"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-005",
+        "type": "calculation",
+        "question": "11 - 5 = ？",
+        "answer": "6",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-006",
+        "type": "calculation",
+        "question": "12 - 4 - 3 = ？",
+        "answer": "5",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "连减"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-007",
+        "type": "calculation",
+        "question": "14 - 6 + 2 = ？",
+        "answer": "10",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "加减混合"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-008",
+        "type": "calculation",
+        "question": "18 - 7 - 5 = ？",
+        "answer": "6",
+        "knowledgePoints": [
+          "subtract-20"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-009",
+        "type": "fill_blank",
+        "question": "34 + 5 = ____，67 - 4 = ____。",
+        "answer": "39, 63",
+        "knowledgePoints": [
+          "number-100"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "数位对齐"
+        ],
+        "source": "21世纪教育网·一下第三单元"
+      },
+      {
+        "id": "g1x-s-010",
+        "type": "fill_blank",
+        "question": "45 + 30 = ____，78 - 50 = ____。",
+        "answer": "75, 28",
+        "knowledgePoints": [
+          "number-100"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "整十数加减"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-011",
+        "type": "fill_blank",
+        "question": "在〇里填上 >、< 或 =：68 〇 72，45 〇 45，91 〇 89。",
+        "answer": "<, =, >",
+        "knowledgePoints": [
+          "number-100"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-012",
+        "type": "calculation",
+        "question": "34 + 47 = ？",
+        "answer": "81",
+        "knowledgePoints": [
+          "add-sub-2digit"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "进位加法"
+        ],
+        "source": "21世纪教育网·一下第四单元"
+      },
+      {
+        "id": "g1x-s-013",
+        "type": "calculation",
+        "question": "27 + 63 = ？",
+        "answer": "90",
+        "knowledgePoints": [
+          "add-sub-2digit"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "进位"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-014",
+        "type": "calculation",
+        "question": "56 + 37 = ？",
+        "answer": "93",
+        "knowledgePoints": [
+          "add-sub-2digit"
+        ],
+        "difficulty": 3,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-015",
+        "type": "calculation",
+        "question": "72 - 38 = ？",
+        "answer": "34",
+        "knowledgePoints": [
+          "add-sub-2digit"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "退位减法"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-016",
+        "type": "fill_blank",
+        "question": "笔算两位数加两位数（进位）：____数位对齐，从____位加起，个位相加满十，向____位进____。",
+        "answer": "相同, 个, 十, 1",
+        "knowledgePoints": [
+          "add-sub-2digit"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-017",
+        "type": "fill_blank",
+        "question": "5元 = ____角，1元 = ____分，3元5角 = ____角。",
+        "answer": "50, 100, 35",
+        "knowledgePoints": [
+          "rmb"
+        ],
+        "difficulty": 1,
+        "errorProne": [
+          "单位换算"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-018",
+        "type": "fill_blank",
+        "question": "一把尺子2元，一支铅笔1元5角，一共____元____角。",
+        "answer": "3, 5",
+        "knowledgePoints": [
+          "rmb"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "元角混算"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-019",
+        "type": "true_false",
+        "question": "小明有15个气球，破了5个，还剩10个。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "subtract-20",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g1x-s-020",
+        "type": "calculation",
+        "question": "43 + 48 = ？",
+        "answer": "91",
+        "knowledgePoints": [
+          "add-sub-2digit"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "进位"
+        ],
+        "source": "21世纪教育网"
+      }
+    ],
+    "templates": [
+      {
+        "id": "g1x-t-001",
+        "type": "application",
+        "template": "树上有 {a} 只小鸟，飞走了 {b} 只，还剩几只？",
+        "knowledgePoints": [
+          "subtract-20",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 8,
+            "max": 18
+          },
+          "b": {
+            "type": "range",
+            "min": 2,
+            "max": 9
+          }
+        },
+        "constraints": [
+          {
+            "check": "a > b",
+            "msg": "原有数量应大于飞走数量"
+          },
+          {
+            "check": "a - b >= 1",
+            "msg": "至少剩1只"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a - b",
+          "unit": "只"
+        },
+        "source": "21世纪教育网·一下·减法应用"
+      },
+      {
+        "id": "g1x-t-002",
+        "type": "application",
+        "template": "哥哥有 {a} 块糖，弟弟有 {b} 块糖，哥哥比弟弟多几块？",
+        "knowledgePoints": [
+          "subtract-20",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "比多比少混淆"
+        ],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 8,
+            "max": 18
+          },
+          "b": {
+            "type": "range",
+            "min": 3,
+            "max": 10
+          }
+        },
+        "constraints": [
+          {
+            "check": "a > b",
+            "msg": "哥哥的糖应多于弟弟"
+          },
+          {
+            "check": "a - b >= 1",
+            "msg": "差值至少1"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a - b",
+          "unit": "块"
+        },
+        "source": "21世纪教育网·一下·比较应用"
+      },
+      {
+        "id": "g1x-t-003",
+        "type": "application",
+        "template": "妈妈买了 {a} 个鸡蛋，吃了 {b} 个，又买了 {c} 个，现在有几个鸡蛋？",
+        "knowledgePoints": [
+          "subtract-20",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "两步顺序混淆"
+        ],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 10,
+            "max": 20
+          },
+          "b": {
+            "type": "range",
+            "min": 2,
+            "max": 8
+          },
+          "c": {
+            "type": "range",
+            "min": 3,
+            "max": 10
+          }
+        },
+        "constraints": [
+          {
+            "check": "a > b",
+            "msg": "原有数量应大于吃掉数量"
+          },
+          {
+            "check": "a - b + c <= 30",
+            "msg": "结果不超过30"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "个",
+          "steps": [
+            {
+              "label": "吃了之后剩下",
+              "expr": "a - b",
+              "unit": "个"
+            },
+            {
+              "label": "又买了之后一共",
+              "expr": "a - b + c",
+              "unit": "个"
+            }
+          ]
+        },
+        "source": "21世纪教育网·一下·两步应用"
+      },
+      {
+        "id": "g1x-t-004",
+        "type": "application",
+        "template": "苹果树有 {a} 棵，桃树有 {b} 棵，果园里一共有多少棵果树？",
+        "knowledgePoints": [
+          "add-sub-2digit",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 20,
+            "max": 50
+          },
+          "b": {
+            "type": "range",
+            "min": 10,
+            "max": 40
+          }
+        },
+        "constraints": [
+          {
+            "check": "a + b <= 99",
+            "msg": "和在100以内"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a + b",
+          "unit": "棵"
+        },
+        "source": "21世纪教育网·一下·两位数加法应用"
+      },
+      {
+        "id": "g1x-t-005",
+        "type": "application",
+        "template": "亮亮摘了 {a} 个桃子，红红摘了 {b} 个，他们一共摘了多少个？",
+        "knowledgePoints": [
+          "add-sub-2digit",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 30,
+            "max": 60
+          },
+          "b": {
+            "type": "range",
+            "min": 20,
+            "max": 40
+          }
+        },
+        "constraints": [
+          {
+            "check": "a + b <= 99",
+            "msg": "和在100以内"
+          }
+        ],
+        "answer": {
+          "type": "expression",
+          "expr": "a + b",
+          "unit": "个"
+        },
+        "source": "21世纪教育网·一下·两位数加法应用"
+      },
+      {
+        "id": "g1x-t-006",
+        "type": "application",
+        "template": "幼儿园有 {a} 名小朋友，有 {b} 个红苹果和 {c} 个青苹果，每人分一个够吗？",
+        "knowledgePoints": [
+          "add-sub-2digit",
+          "word-problem-1step-xia"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "先求和再比较"
+        ],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 50,
+            "max": 80
+          },
+          "b": {
+            "type": "range",
+            "min": 30,
+            "max": 50
+          },
+          "c": {
+            "type": "range",
+            "min": 20,
+            "max": 40
+          }
+        },
+        "constraints": [
+          {
+            "check": "b + c >= a - 5 && b + c <= a + 10",
+            "msg": "苹果总数在人数附近，才有比较意义"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "",
+          "steps": [
+            {
+              "label": "苹果总数",
+              "expr": "b + c",
+              "unit": "个"
+            },
+            {
+              "label": "比较结果",
+              "expr": "b + c >= a ? '够' : '不够'",
+              "unit": ""
+            }
+          ]
+        },
+        "source": "21世纪教育网·一下·综合比较应用",
+        "_note": "答案表达式包含三元判断，引擎需支持"
+      }
+    ],
+    "exam": {
+      "title": "冀教版一年级下册数学期末测试卷",
+      "totalScore": 100,
+      "duration": 60,
+      "headerFields": [
+        "班级____",
+        "姓名____",
+        "得分____"
+      ],
+      "sections": [
+        {
+          "name": "一、填空题",
+          "instruction": "（每空1分，共24分）",
+          "totalPoints": 24,
+          "items": [
+            {
+              "count": 6,
+              "type": "fill_blank",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "number-100",
+                "subtract-20"
+              ],
+              "sourceType": "static"
+            },
+            {
+              "count": 4,
+              "type": "fill_blank",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "add-sub-2digit",
+                "rmb"
+              ],
+              "sourceType": "static"
+            },
+            {
+              "count": 2,
+              "type": "fill_blank",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "classification"
+              ],
+              "sourceType": "static"
+            }
+          ]
+        },
+        {
+          "name": "二、选择题",
+          "instruction": "（将正确答案的序号填在括号里。每题2分，共10分）",
+          "totalPoints": 10,
+          "items": [
+            {
+              "count": 5,
+              "type": "choice",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "number-100",
+                "add-sub-2digit",
+                "rmb",
+                "classification"
+              ],
+              "sourceType": "static"
+            }
+          ]
+        },
+        {
+          "name": "三、计算题",
+          "instruction": "（共24分）",
+          "totalPoints": 24,
+          "subSections": [
+            {
+              "name": "1. 直接写得数",
+              "instruction": "（每题1分，共12分）",
+              "items": [
+                {
+                  "count": 6,
+                  "type": "calculation",
+                  "pointsEach": 1,
+                  "knowledgePoints": [
+                    "subtract-20"
+                  ],
+                  "sourceType": "static"
+                },
+                {
+                  "count": 6,
+                  "type": "calculation",
+                  "pointsEach": 1,
+                  "knowledgePoints": [
+                    "add-sub-2digit",
+                    "number-100"
+                  ],
+                  "sourceType": "static"
+                }
+              ]
+            },
+            {
+              "name": "2. 用竖式计算",
+              "instruction": "（每题3分，共12分）",
+              "items": [
+                {
+                  "count": 4,
+                  "type": "calculation",
+                  "pointsEach": 3,
+                  "knowledgePoints": [
+                    "add-sub-2digit"
+                  ],
+                  "sourceType": "static"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "四、按要求做题",
+          "instruction": "（共11分）",
+          "totalPoints": 11,
+          "items": [
+            {
+              "count": 3,
+              "type": "true_false",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "classification",
+                "number-100"
+              ],
+              "sourceType": "static"
+            },
+            {
+              "count": 1,
+              "type": "fill_blank",
+              "pointsEach": 5,
+              "knowledgePoints": [
+                "rmb"
+              ],
+              "sourceType": "template"
+            }
+          ]
+        },
+        {
+          "name": "五、解决问题",
+          "instruction": "（第1-3题每题5分，第4-5题每题8分，共31分）",
+          "totalPoints": 31,
+          "items": [
+            {
+              "count": 1,
+              "type": "application",
+              "pointsEach": 5,
+              "knowledgePoints": [
+                "subtract-20",
+                "word-problem-1step-xia"
+              ],
+              "sourceType": "template"
+            },
+            {
+              "count": 2,
+              "type": "application",
+              "pointsEach": 5,
+              "knowledgePoints": [
+                "add-sub-2digit",
+                "word-problem-1step-xia"
+              ],
+              "sourceType": "template"
+            },
+            {
+              "count": 2,
+              "type": "application",
+              "pointsEach": 8,
+              "knowledgePoints": [
+                "add-sub-2digit",
+                "subtract-20",
+                "word-problem-1step-xia"
+              ],
+              "sourceType": "template"
+            }
+          ]
+        }
+      ],
+      "_notes": {
+        "操作题": "真实考试中有画图形、拨钟表等操作题，本卷用分类判断题+人民币模板题替代",
+        "选择题": "目前一年级题库中选择题较少，如不足会从填空/判断题转换"
+      }
+    }
+  },
+  "grade3": {
+    "meta": {
+      "subject": "math",
+      "subjectName": "数学",
+      "grade": 3,
+      "gradeLabel": "三年级",
+      "textbook": "冀教版2024新版",
+      "schoolYear": "2025-2026",
+      "semester": "下册",
+      "questionTypes": [
+        "calculation",
+        "fill_blank",
+        "true_false",
+        "choice",
+        "application"
+      ],
+      "defaultTemplateRatio": 0.5,
+      "knowledgePoints": [
+        {
+          "id": "year-month-day",
+          "name": "年、月、日",
+          "category": "应用",
+          "difficulty": 2,
+          "subTopics": [
+            "24时记时法",
+            "年月日",
+            "平年闰年",
+            "二十四节气"
+          ],
+          "canComboWith": [
+            "multi-digit-multiplication",
+            "decimal-life"
+          ],
+          "prerequisites": []
+        },
+        {
+          "id": "word-problem-2",
+          "name": "问题与运算（二）",
+          "category": "应用",
+          "difficulty": 3,
+          "canComboWith": [
+            "multi-digit-multiplication",
+            "year-month-day",
+            "decimal-life"
+          ],
+          "prerequisites": [
+            "multi-digit-multiplication"
+          ]
+        },
+        {
+          "id": "observe-objects",
+          "name": "观察物体",
+          "category": "几何",
+          "difficulty": 1,
+          "canComboWith": [],
+          "prerequisites": []
+        },
+        {
+          "id": "multi-digit-multiplication",
+          "name": "多位数乘法",
+          "category": "计算",
+          "difficulty": 3,
+          "subTopics": [
+            "两位数乘两位数",
+            "三位数乘两位数"
+          ],
+          "canComboWith": [
+            "year-month-day",
+            "decimal-life",
+            "measurement-2",
+            "word-problem-2"
+          ],
+          "prerequisites": []
+        },
+        {
+          "id": "measurement-2",
+          "name": "测量（二）",
+          "category": "应用",
+          "difficulty": 2,
+          "subTopics": [
+            "分米和毫米",
+            "千米"
+          ],
+          "canComboWith": [
+            "multi-digit-multiplication"
+          ],
+          "prerequisites": []
+        },
+        {
+          "id": "data-collection",
+          "name": "数据收集和整理",
+          "category": "统计",
+          "difficulty": 2,
+          "canComboWith": [
+            "multi-digit-multiplication"
+          ],
+          "prerequisites": []
+        },
+        {
+          "id": "decimal-life",
+          "name": "生活中的小数",
+          "category": "应用",
+          "difficulty": 2,
+          "subTopics": [
+            "元角分与小数",
+            "小数加减"
+          ],
+          "canComboWith": [
+            "multi-digit-multiplication",
+            "year-month-day",
+            "word-problem-2"
+          ],
+          "prerequisites": []
+        },
+        {
+          "id": "figure-movement",
+          "name": "图形的运动（一）",
+          "category": "几何",
+          "difficulty": 1,
+          "subTopics": [
+            "轴对称",
+            "平移",
+            "旋转"
+          ],
+          "canComboWith": [],
+          "prerequisites": []
+        },
+        {
+          "id": "explore-park",
+          "name": "探索乐园",
+          "category": "思维",
+          "difficulty": 3,
+          "canComboWith": [],
+          "prerequisites": []
+        }
+      ],
+      "_notes": {
+        "observe-objects": "搜到的具体题目偏少，以操作题为主，待补充",
+        "data-collection": "搜到的具体题目偏少，以统计表读题为主，待补充",
+        "explore-park": "几乎没搜到具体题，以逻辑推理、数字规律为主，待补充"
+      }
+    },
+    "staticQuestions": [
+      {
+        "id": "g3-s-001",
+        "type": "fill_blank",
+        "question": "平年有____天，闰年有____天。平年二月有____天，闰年二月有____天。",
+        "answer": "365, 366, 28, 29",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网·三下第一单元"
+      },
+      {
+        "id": "g3-s-002",
+        "type": "fill_blank",
+        "question": "公历年份是____的倍数的一般是闰年；但公历年份是整百数的，必须是____的倍数才是闰年。",
+        "answer": "4, 400",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "整百年判断"
+        ],
+        "source": "21世纪教育网·三下第一单元"
+      },
+      {
+        "id": "g3-s-003",
+        "type": "choice",
+        "question": "下列年份中，哪个是闰年？",
+        "options": [
+          "A. 1998",
+          "B. 2000",
+          "C. 2010",
+          "D. 1900"
+        ],
+        "answer": "B",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "1900是整百年但不是400的倍数"
+        ],
+        "source": "21世纪教育网·三下第一单元"
+      },
+      {
+        "id": "g3-s-004",
+        "type": "true_false",
+        "question": "7月是大月，8月是小月。（ ）",
+        "answer": "×",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 1,
+        "errorProne": [
+          "七八月连续大月"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-005",
+        "type": "true_false",
+        "question": "晚上12时就是24时，也是第二天的0时。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-006",
+        "type": "fill_blank",
+        "question": "下午4时30分用24时记时法表示是____；晚上11时用24时记时法表示是____。",
+        "answer": "16:30, 23:00",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-007",
+        "type": "choice",
+        "question": "图书馆的开放时间是8:30—17:30，一天共开放（ ）。",
+        "options": [
+          "A. 8小时30分",
+          "B. 9小时",
+          "C. 9小时30分"
+        ],
+        "answer": "B",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "经过时间计算"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-008",
+        "type": "fill_blank",
+        "question": "一列客车18时20分从北京开车，22时40分到达石家庄。路上用了____小时____分。",
+        "answer": "4, 20",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "跨小时计算"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-009",
+        "type": "fill_blank",
+        "question": "乐乐通常晚上8:30睡觉，第二天早上7:00起床，他一共睡了____小时____分。",
+        "answer": "10, 30",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "跨天计算"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-010",
+        "type": "true_false",
+        "question": "一个月最多有5个星期日。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-011",
+        "type": "calculation",
+        "question": "30 × 50 = ？",
+        "answer": "1500",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网·三下第二单元"
+      },
+      {
+        "id": "g3-s-012",
+        "type": "calculation",
+        "question": "25 × 40 = ？",
+        "answer": "1000",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-013",
+        "type": "calculation",
+        "question": "24 × 12 = ？",
+        "answer": "288",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-014",
+        "type": "calculation",
+        "question": "78 × 19 = ？",
+        "answer": "1482",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "进位"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-015",
+        "type": "calculation",
+        "question": "48 × 65 = ？",
+        "answer": "3120",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "数位对齐"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-016",
+        "type": "calculation",
+        "question": "56 × 67 = ？",
+        "answer": "3752",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 3,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-017",
+        "type": "calculation",
+        "question": "158 × 24 = ？",
+        "answer": "3792",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "三位数乘两位数"
+        ],
+        "source": "21世纪教育网·三下第三单元"
+      },
+      {
+        "id": "g3-s-018",
+        "type": "calculation",
+        "question": "325 × 26 = ？",
+        "answer": "8450",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 3,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-019",
+        "type": "calculation",
+        "question": "150 × 30 = ？",
+        "answer": "4500",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "末尾0个数的处理"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-020",
+        "type": "calculation",
+        "question": "230 × 40 = ？",
+        "answer": "9200",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-021",
+        "type": "calculation",
+        "question": "450 × 80 = ？",
+        "answer": "36000",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "末尾0个数"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-022",
+        "type": "true_false",
+        "question": "50×60的积的末尾只有两个0。（ ）",
+        "answer": "×",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "乘积末尾0的判断"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-023",
+        "type": "true_false",
+        "question": "两位数乘两位数的积可能是三位数或四位数。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-024",
+        "type": "fill_blank",
+        "question": "125×80的积末尾有____个0。",
+        "answer": "4",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "乘积末尾0的个数"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-025",
+        "type": "fill_blank",
+        "question": "最大的三位数（999）乘最小的两位数（10），积是____。",
+        "answer": "9990",
+        "knowledgePoints": [
+          "multi-digit-multiplication"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-026",
+        "type": "fill_blank",
+        "question": "8角6分 = ____元；2.5元 = ____元____角。",
+        "answer": "0.86, 2, 5",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 1,
+        "errorProne": [
+          "单位换算"
+        ],
+        "source": "21世纪教育网·三下第六单元"
+      },
+      {
+        "id": "g3-s-027",
+        "type": "fill_blank",
+        "question": "1元9分 = ____元；2元3角6分 = ____元。",
+        "answer": "1.09, 2.36",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "中间有0的小数"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-028",
+        "type": "choice",
+        "question": "下面哪个小数最大？",
+        "options": [
+          "A. 0.7",
+          "B. 0.3",
+          "C. 0.9",
+          "D. 1.2"
+        ],
+        "answer": "D",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-029",
+        "type": "calculation",
+        "question": "0.3 + 0.4 = ？",
+        "answer": "0.7",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-030",
+        "type": "calculation",
+        "question": "7.3 - 2.6 = ？",
+        "answer": "4.7",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "退位"
+        ],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-031",
+        "type": "calculation",
+        "question": "9 - 7.6 = ？",
+        "answer": "1.4",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "整数减小数"
+        ],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-032",
+        "type": "calculation",
+        "question": "27.5 - 13.8 = ？",
+        "answer": "13.7",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 3,
+        "errorProne": [],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-033",
+        "type": "fill_blank",
+        "question": "在〇里填上 >、< 或 =：0.8 〇 1.1，3.2 〇 2.3，8角 〇 0.8元。",
+        "answer": "<, >, =",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-034",
+        "type": "fill_blank",
+        "question": "2分米 = ____厘米；3厘米 = ____毫米；6000米 = ____千米。",
+        "answer": "20, 30, 6",
+        "knowledgePoints": [
+          "measurement-2"
+        ],
+        "difficulty": 1,
+        "errorProne": [
+          "单位换算进率"
+        ],
+        "source": "21世纪教育网·三下第四单元"
+      },
+      {
+        "id": "g3-s-035",
+        "type": "true_false",
+        "question": "电梯运行时的运动是平移。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "figure-movement"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网·三下第七单元"
+      },
+      {
+        "id": "g3-s-036",
+        "type": "true_false",
+        "question": "拧瓶盖时，瓶盖的运动是旋转。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "figure-movement"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-037",
+        "type": "choice",
+        "question": "下面说法中，不正确的是（ ）。",
+        "options": [
+          "A. 电梯运行时的运动是平移",
+          "B. 拧瓶盖时，瓶盖的运动是旋转",
+          "C. 汽车沿直线行驶的过程中，车身的运动是旋转"
+        ],
+        "answer": "C",
+        "knowledgePoints": [
+          "figure-movement"
+        ],
+        "difficulty": 2,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-038",
+        "type": "true_false",
+        "question": "图形在平移时，形状和大小都不发生变化。（ ）",
+        "answer": "√",
+        "knowledgePoints": [
+          "figure-movement"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-039",
+        "type": "true_false",
+        "question": "物体在平移、旋转时，它的大小、位置、方向都不会改变。（ ）",
+        "answer": "×",
+        "knowledgePoints": [
+          "figure-movement"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "旋转改变方向"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-040",
+        "type": "choice",
+        "question": "时钟的秒针在滴答滴答转动属于（ ）现象。",
+        "options": [
+          "A. 平移",
+          "B. 旋转",
+          "C. 无法确定"
+        ],
+        "answer": "B",
+        "knowledgePoints": [
+          "figure-movement"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-041",
+        "type": "fill_blank",
+        "question": "2025年是____年（填\"平年\"或\"闰年\"），2月有____天，全年共____天。",
+        "answer": "平年, 28, 365",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "2025不能被4整除"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-042",
+        "type": "choice",
+        "question": "下午2点用24时记时法表示是（ ）。",
+        "options": [
+          "A. 12:00",
+          "B. 14:00",
+          "C. 18:00"
+        ],
+        "answer": "B",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-043",
+        "type": "fill_blank",
+        "question": "《新闻联播》在晚上7:00开始播出，这个\"晚上7:00\"用的是____计时法。",
+        "answer": "12时",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 1,
+        "errorProne": [],
+        "source": "教习网"
+      },
+      {
+        "id": "g3-s-044",
+        "type": "fill_blank",
+        "question": "汽车早上10:00出发，当天下午4:00到达，汽车走了____小时。",
+        "answer": "6",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "普通计时转24时"
+        ],
+        "source": "21世纪教育网"
+      },
+      {
+        "id": "g3-s-045",
+        "type": "choice",
+        "question": "奶奶今年72岁，可她只过了18个生日，她的生日是（ ）。",
+        "options": [
+          "A. 2月28日",
+          "B. 2月29日",
+          "C. 12月31日"
+        ],
+        "answer": "B",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "闰年2月29日"
+        ],
+        "source": "21世纪教育网"
+      }
+    ],
+    "templates": [
+      {
+        "id": "g3-t-001",
+        "type": "application",
+        "template": "{person}去超市买了{a}千克{stuff}，每千克{b}元，又买了{c}千克{fruit}，每千克{d}元。{person}一共花了多少钱？",
+        "knowledgePoints": [
+          "multi-digit-multiplication",
+          "decimal-life",
+          "word-problem-2"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "两步混淆",
+          "单位遗漏"
+        ],
+        "slots": {
+          "person": {
+            "type": "pick",
+            "values": [
+              "小明",
+              "小红",
+              "小刚",
+              "小丽",
+              "华华",
+              "乐乐"
+            ]
+          },
+          "stuff": {
+            "type": "pick",
+            "values": [
+              "苹果",
+              "梨",
+              "香蕉",
+              "橙子"
+            ]
+          },
+          "fruit": {
+            "type": "pick",
+            "values": [
+              "橘子",
+              "西瓜",
+              "桃子",
+              "葡萄",
+              "草莓"
+            ]
+          },
+          "a": {
+            "type": "range",
+            "min": 2,
+            "max": 9
+          },
+          "b": {
+            "type": "range",
+            "min": 3,
+            "max": 8
+          },
+          "c": {
+            "type": "range",
+            "min": 1,
+            "max": 7
+          },
+          "d": {
+            "type": "range",
+            "min": 3,
+            "max": 8
+          }
+        },
+        "constraints": [
+          {
+            "check": "a !== c || b !== d",
+            "msg": "两组数据应有差异，增加区分度"
+          },
+          {
+            "check": "a * b <= 72",
+            "msg": "第一组总价合理"
+          },
+          {
+            "check": "a * b + c * d <= 120",
+            "msg": "总价不超过120元"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "元",
+          "steps": [
+            {
+              "label": "{stuff}总价",
+              "expr": "a * b",
+              "unit": "元"
+            },
+            {
+              "label": "{fruit}总价",
+              "expr": "c * d",
+              "unit": "元"
+            },
+            {
+              "label": "一共花的钱",
+              "expr": "a * b + c * d",
+              "unit": "元"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·两位数乘法应用题"
+      },
+      {
+        "id": "g3-t-002",
+        "type": "application",
+        "template": "{person}买了{a}本笔记本，每本{b}元，又买了{c}支笔，每支{d}元。付了{money}元，应找回多少元？",
+        "knowledgePoints": [
+          "multi-digit-multiplication",
+          "decimal-life",
+          "word-problem-2"
+        ],
+        "difficulty": 4,
+        "errorProne": [
+          "三步混淆",
+          "找零计算"
+        ],
+        "slots": {
+          "person": {
+            "type": "pick",
+            "values": [
+              "小明",
+              "小红",
+              "小刚",
+              "小丽",
+              "华华",
+              "乐乐"
+            ]
+          },
+          "a": {
+            "type": "range",
+            "min": 2,
+            "max": 8
+          },
+          "b": {
+            "type": "range",
+            "min": 3,
+            "max": 10
+          },
+          "c": {
+            "type": "range",
+            "min": 1,
+            "max": 6
+          },
+          "d": {
+            "type": "range",
+            "min": 2,
+            "max": 8
+          },
+          "money": {
+            "type": "range",
+            "min": 50,
+            "max": 100,
+            "step": 10
+          }
+        },
+        "constraints": [
+          {
+            "check": "a * b + c * d < money",
+            "msg": "总花费应小于付款金额"
+          },
+          {
+            "check": "money - (a * b + c * d) >= 1",
+            "msg": "至少找回1元"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "元",
+          "steps": [
+            {
+              "label": "笔记本总价",
+              "expr": "a * b",
+              "unit": "元"
+            },
+            {
+              "label": "笔总价",
+              "expr": "c * d",
+              "unit": "元"
+            },
+            {
+              "label": "一共花费",
+              "expr": "a * b + c * d",
+              "unit": "元"
+            },
+            {
+              "label": "应找回",
+              "expr": "money - (a * b + c * d)",
+              "unit": "元"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·小数加减应用题"
+      },
+      {
+        "id": "g3-t-003",
+        "type": "application",
+        "template": "{person}看一本{book}，每天看{a}页，看了{b}天，还剩{c}页没看。这本书一共有多少页？",
+        "knowledgePoints": [
+          "multi-digit-multiplication",
+          "word-problem-2"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "乘加顺序混淆"
+        ],
+        "slots": {
+          "person": {
+            "type": "pick",
+            "values": [
+              "小明",
+              "小红",
+              "小刚",
+              "小丽",
+              "聪聪"
+            ]
+          },
+          "book": {
+            "type": "pick",
+            "values": [
+              "《童话故事》",
+              "《数学趣题》",
+              "《科学探秘》",
+              "《历史故事》"
+            ]
+          },
+          "a": {
+            "type": "range",
+            "min": 5,
+            "max": 18
+          },
+          "b": {
+            "type": "range",
+            "min": 3,
+            "max": 9
+          },
+          "c": {
+            "type": "range",
+            "min": 10,
+            "max": 50
+          }
+        },
+        "constraints": [
+          {
+            "check": "a * b >= 20",
+            "msg": "已看页数不少于20页"
+          },
+          {
+            "check": "a * b + c <= 200",
+            "msg": "总页数不超过200页"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "页",
+          "steps": [
+            {
+              "label": "已经看的页数",
+              "expr": "a * b",
+              "unit": "页"
+            },
+            {
+              "label": "这本书总页数",
+              "expr": "a * b + c",
+              "unit": "页"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·多位数乘法应用题"
+      },
+      {
+        "id": "g3-t-004",
+        "type": "application",
+        "template": "学校有{a}个学生去春游，每辆大巴坐{b}人。已经坐了{c}辆车，还需要几辆车才能全部坐下？",
+        "knowledgePoints": [
+          "multi-digit-multiplication",
+          "word-problem-2"
+        ],
+        "difficulty": 4,
+        "errorProne": [
+          "余数处理",
+          "三步分解",
+          "进一法"
+        ],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 120,
+            "max": 300
+          },
+          "b": {
+            "type": "range",
+            "min": 30,
+            "max": 45
+          },
+          "c": {
+            "type": "range",
+            "min": 1,
+            "max": 4
+          }
+        },
+        "constraints": [
+          {
+            "check": "c * b < a",
+            "msg": "已坐人数应少于总人数"
+          },
+          {
+            "check": "a <= 300",
+            "msg": "总人数不超过300"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "辆",
+          "steps": [
+            {
+              "label": "已经坐了的人数",
+              "expr": "c * b",
+              "unit": "人"
+            },
+            {
+              "label": "还剩多少人",
+              "expr": "a - c * b",
+              "unit": "人"
+            },
+            {
+              "label": "还需要几辆车（进一法）",
+              "expr": "Math.ceil((a - c * b) / b)",
+              "unit": "辆"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·多位数乘法应用题"
+      },
+      {
+        "id": "g3-t-005",
+        "type": "application",
+        "template": "一本{book1} {price1}元，比一本{book2}贵 {diff}元。{person}想买一本{book1}和一本{book2}，一共需要多少元？",
+        "knowledgePoints": [
+          "decimal-life",
+          "word-problem-2"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "先求未知价格再求和"
+        ],
+        "slots": {
+          "book1": {
+            "type": "pick",
+            "values": [
+              "童话书",
+              "作文书",
+              "故事书",
+              "科学书"
+            ]
+          },
+          "book2": {
+            "type": "pick",
+            "values": [
+              "绘本",
+              "漫画书",
+              "练习册",
+              "字帖"
+            ]
+          },
+          "person": {
+            "type": "pick",
+            "values": [
+              "小明",
+              "小红",
+              "小刚",
+              "小丽",
+              "华华",
+              "乐乐"
+            ]
+          },
+          "price1": {
+            "type": "range",
+            "min": 5,
+            "max": 15,
+            "step": 0.1
+          },
+          "diff": {
+            "type": "range",
+            "min": 1,
+            "max": 5,
+            "step": 0.1
+          }
+        },
+        "constraints": [
+          {
+            "check": "price1 > diff",
+            "msg": "贵差值应小于原价"
+          },
+          {
+            "check": "price1 - diff >= 1",
+            "msg": "第二本书价格至少1元"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "元",
+          "steps": [
+            {
+              "label": "{book2}的价格",
+              "expr": "price1 - diff",
+              "unit": "元"
+            },
+            {
+              "label": "两本书一共",
+              "expr": "price1 + (price1 - diff)",
+              "unit": "元"
+            }
+          ]
+        },
+        "source": "教习网·三下·小数应用题"
+      },
+      {
+        "id": "g3-t-006",
+        "type": "application",
+        "template": "{person}参加{activity}，从{startMonth}月{startDay}日开始，到{endMonth}月{endDay}日结束。每天活动经费为{fund}元，一共需要多少元？",
+        "knowledgePoints": [
+          "year-month-day",
+          "multi-digit-multiplication",
+          "word-problem-2"
+        ],
+        "difficulty": 4,
+        "errorProne": [
+          "跨月天数计算",
+          "起止日是否包含"
+        ],
+        "slots": {
+          "person": {
+            "type": "pick",
+            "values": [
+              "天天",
+              "乐乐",
+              "华华",
+              "小明"
+            ]
+          },
+          "activity": {
+            "type": "pick",
+            "values": [
+              "少年军事体验营",
+              "科技夏令营",
+              "英语冬令营",
+              "篮球集训营"
+            ]
+          },
+          "startMonth": {
+            "type": "pick",
+            "values": [
+              7,
+              10
+            ]
+          },
+          "startDay": {
+            "type": "range",
+            "min": 10,
+            "max": 25
+          },
+          "endMonth": {
+            "type": "pick",
+            "values": [
+              7,
+              8,
+              10,
+              11
+            ]
+          },
+          "endDay": {
+            "type": "range",
+            "min": 10,
+            "max": 25
+          },
+          "fund": {
+            "type": "range",
+            "min": 5,
+            "max": 15
+          }
+        },
+        "constraints": [
+          {
+            "check": "endMonth >= startMonth",
+            "msg": "结束月份不早于开始月份"
+          },
+          {
+            "check": "endMonth - startMonth <= 1",
+            "msg": "最多跨1个月"
+          },
+          {
+            "check": "(endMonth === startMonth && endDay > startDay) || (endMonth > startMonth)",
+            "msg": "结束晚于开始"
+          },
+          {
+            "check": "endDay - startDay + 1 + (endMonth - startMonth) * 30 >= 5",
+            "msg": "至少5天"
+          },
+          {
+            "check": "endDay - startDay + 1 + (endMonth - startMonth) * 30 <= 35",
+            "msg": "不超过35天"
+          },
+          {
+            "check": "fund >= 5",
+            "msg": "经费至少5元"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "元",
+          "steps": [
+            {
+              "label": "活动天数",
+              "expr": "endDay - startDay + 1 + (endMonth - startMonth) * 30",
+              "unit": "天"
+            },
+            {
+              "label": "总经费",
+              "expr": "(endDay - startDay + 1 + (endMonth - startMonth) * 30) * fund",
+              "unit": "元"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·年月日综合应用"
+      },
+      {
+        "id": "g3-t-007",
+        "type": "application",
+        "template": "{person}{action}，从{sh}时{sm}分出发，{eh}时{em}分到达。{person}路上用了多长时间？",
+        "knowledgePoints": [
+          "year-month-day"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "分钟够不够减",
+          "借位"
+        ],
+        "slots": {
+          "person": {
+            "type": "pick",
+            "values": [
+              "爸爸",
+              "妈妈",
+              "一列客车",
+              "一辆汽车"
+            ]
+          },
+          "action": {
+            "type": "pick",
+            "values": [
+              "坐火车从甲站到乙站",
+              "开车从北京去天津",
+              "坐高铁从石家庄去郑州",
+              "坐大巴从学校去公园"
+            ]
+          },
+          "sh": {
+            "type": "range",
+            "min": 8,
+            "max": 20
+          },
+          "sm": {
+            "type": "range",
+            "min": 0,
+            "max": 50,
+            "step": 10
+          },
+          "eh": {
+            "type": "range",
+            "min": 9,
+            "max": 23
+          },
+          "em": {
+            "type": "range",
+            "min": 0,
+            "max": 50,
+            "step": 10
+          }
+        },
+        "constraints": [
+          {
+            "check": "eh > sh || (eh === sh && em > sm)",
+            "msg": "结束时刻应晚于开始时刻"
+          },
+          {
+            "check": "eh * 60 + em - sh * 60 - sm <= 600",
+            "msg": "经过时间不超过10小时"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "",
+          "steps": [
+            {
+              "label": "总共经过分钟数",
+              "expr": "eh * 60 + em - sh * 60 - sm",
+              "unit": "分钟"
+            },
+            {
+              "label": "合多少小时多少分钟",
+              "expr": "Math.floor((eh * 60 + em - sh * 60 - sm) / 60)",
+              "unit": "小时"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·24时记时法应用"
+      },
+      {
+        "id": "g3-t-008",
+        "type": "application",
+        "template": "{person}买了{a}箱饮料，每箱{b}听，每听{c}元，共花了多少元？",
+        "knowledgePoints": [
+          "multi-digit-multiplication",
+          "word-problem-2"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "连乘顺序"
+        ],
+        "slots": {
+          "person": {
+            "type": "pick",
+            "values": [
+              "王老师",
+              "张老师",
+              "李阿姨",
+              "刘叔叔"
+            ]
+          },
+          "a": {
+            "type": "range",
+            "min": 2,
+            "max": 5
+          },
+          "b": {
+            "type": "range",
+            "min": 12,
+            "max": 24
+          },
+          "c": {
+            "type": "range",
+            "min": 2,
+            "max": 5
+          }
+        },
+        "constraints": [
+          {
+            "check": "a * b * c <= 500",
+            "msg": "总花费不超过500元"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "元",
+          "steps": [
+            {
+              "label": "一共有多少听",
+              "expr": "a * b",
+              "unit": "听"
+            },
+            {
+              "label": "一共花的钱",
+              "expr": "a * b * c",
+              "unit": "元"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·连乘应用题"
+      },
+      {
+        "id": "g3-t-009",
+        "type": "application",
+        "template": "学校食堂原来有大米{a}千克，又运来{b}袋，每袋{c}千克。现在食堂共有多少千克大米？",
+        "knowledgePoints": [
+          "multi-digit-multiplication",
+          "word-problem-2"
+        ],
+        "difficulty": 3,
+        "errorProne": [
+          "乘加顺序"
+        ],
+        "slots": {
+          "a": {
+            "type": "range",
+            "min": 200,
+            "max": 500
+          },
+          "b": {
+            "type": "range",
+            "min": 10,
+            "max": 20
+          },
+          "c": {
+            "type": "range",
+            "min": 15,
+            "max": 30
+          }
+        },
+        "constraints": [
+          {
+            "check": "a + b * c <= 1200",
+            "msg": "总重量不超过1200千克"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "千克",
+          "steps": [
+            {
+              "label": "新运来的大米",
+              "expr": "b * c",
+              "unit": "千克"
+            },
+            {
+              "label": "现在食堂共有",
+              "expr": "a + b * c",
+              "unit": "千克"
+            }
+          ]
+        },
+        "source": "21世纪教育网·三下·乘法应用题"
+      },
+      {
+        "id": "g3-t-010",
+        "type": "application",
+        "template": "一套{product} {price1}元，{person}付了100元，应找回多少元？",
+        "knowledgePoints": [
+          "decimal-life"
+        ],
+        "difficulty": 2,
+        "errorProne": [
+          "退位"
+        ],
+        "slots": {
+          "product": {
+            "type": "pick",
+            "values": [
+              "羽毛球拍",
+              "篮球",
+              "足球",
+              "书包",
+              "学习机"
+            ]
+          },
+          "person": {
+            "type": "pick",
+            "values": [
+              "李老师",
+              "张老师",
+              "王阿姨",
+              "刘叔叔",
+              "小明"
+            ]
+          },
+          "price1": {
+            "type": "range",
+            "min": 15,
+            "max": 95,
+            "step": 0.5
+          }
+        },
+        "constraints": [
+          {
+            "check": "price1 < 100",
+            "msg": "商品价格应小于100元"
+          },
+          {
+            "check": "100 - price1 >= 0.5",
+            "msg": "至少找回0.5元"
+          }
+        ],
+        "answer": {
+          "type": "steps",
+          "unit": "元",
+          "steps": [
+            {
+              "label": "应找回",
+              "expr": "100 - price1",
+              "unit": "元"
+            }
+          ]
+        },
+        "source": "教习网·三下·小数减法应用"
+      }
+    ],
+    "exam": {
+      "title": "冀教版三年级下册数学期末测试卷",
+      "totalScore": 100,
+      "duration": 60,
+      "headerFields": [
+        "班级____",
+        "姓名____",
+        "得分____"
+      ],
+      "sections": [
+        {
+          "name": "一、填空题",
+          "instruction": "（每空2分，共20分）",
+          "totalPoints": 20,
+          "items": [
+            {
+              "count": 5,
+              "type": "fill_blank",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "year-month-day",
+                "measurement-2"
+              ],
+              "sourceType": "static"
+            },
+            {
+              "count": 5,
+              "type": "fill_blank",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "multi-digit-multiplication",
+                "decimal-life"
+              ],
+              "sourceType": "static"
+            }
+          ]
+        },
+        {
+          "name": "二、判断题",
+          "instruction": "（对的打\"√\"，错的打\"×\"。每题1分，共5分）",
+          "totalPoints": 5,
+          "items": [
+            {
+              "count": 5,
+              "type": "true_false",
+              "pointsEach": 1,
+              "knowledgePoints": [
+                "year-month-day",
+                "figure-movement",
+                "multi-digit-multiplication"
+              ],
+              "sourceType": "static"
+            }
+          ]
+        },
+        {
+          "name": "三、选择题",
+          "instruction": "（将正确答案的序号填在括号里。每题2分，共10分）",
+          "totalPoints": 10,
+          "items": [
+            {
+              "count": 5,
+              "type": "choice",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "year-month-day",
+                "multi-digit-multiplication",
+                "decimal-life",
+                "figure-movement",
+                "measurement-2"
+              ],
+              "sourceType": "static"
+            }
+          ]
+        },
+        {
+          "name": "四、计算题",
+          "instruction": "（共35分）",
+          "totalPoints": 35,
+          "subSections": [
+            {
+              "name": "1. 直接写得数",
+              "instruction": "（每题1分，共8分）",
+              "items": [
+                {
+                  "count": 8,
+                  "type": "calculation",
+                  "pointsEach": 1,
+                  "knowledgePoints": [
+                    "multi-digit-multiplication",
+                    "decimal-life"
+                  ],
+                  "sourceType": "static"
+                }
+              ]
+            },
+            {
+              "name": "2. 用竖式计算",
+              "instruction": "（每题3分，共12分）",
+              "items": [
+                {
+                  "count": 4,
+                  "type": "calculation",
+                  "pointsEach": 3,
+                  "knowledgePoints": [
+                    "multi-digit-multiplication"
+                  ],
+                  "sourceType": "static"
+                }
+              ]
+            },
+            {
+              "name": "3. 脱式计算",
+              "instruction": "（每题3分，共9分）",
+              "items": [
+                {
+                  "count": 3,
+                  "type": "calculation",
+                  "pointsEach": 3,
+                  "knowledgePoints": [
+                    "multi-digit-multiplication",
+                    "decimal-life"
+                  ],
+                  "sourceType": "static"
+                }
+              ]
+            },
+            {
+              "name": "4. 估算",
+              "instruction": "（每题2分，共6分）",
+              "items": [
+                {
+                  "count": 3,
+                  "type": "calculation",
+                  "pointsEach": 2,
+                  "knowledgePoints": [
+                    "multi-digit-multiplication"
+                  ],
+                  "sourceType": "static"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "五、操作题",
+          "instruction": "（共8分）",
+          "totalPoints": 8,
+          "items": [
+            {
+              "count": 2,
+              "type": "true_false",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "figure-movement"
+              ],
+              "sourceType": "static"
+            },
+            {
+              "count": 2,
+              "type": "choice",
+              "pointsEach": 2,
+              "knowledgePoints": [
+                "figure-movement"
+              ],
+              "sourceType": "static"
+            }
+          ]
+        },
+        {
+          "name": "六、解决问题",
+          "instruction": "（第1-2题每题4分，第3-5题每题4分，共20分）",
+          "totalPoints": 20,
+          "items": [
+            {
+              "count": 2,
+              "type": "application",
+              "pointsEach": 4,
+              "knowledgePoints": [
+                "multi-digit-multiplication",
+                "word-problem-2"
+              ],
+              "sourceType": "template"
+            },
+            {
+              "count": 2,
+              "type": "application",
+              "pointsEach": 4,
+              "knowledgePoints": [
+                "decimal-life",
+                "word-problem-2"
+              ],
+              "sourceType": "template"
+            },
+            {
+              "count": 1,
+              "type": "application",
+              "pointsEach": 4,
+              "knowledgePoints": [
+                "year-month-day",
+                "word-problem-2"
+              ],
+              "sourceType": "template"
+            }
+          ]
+        }
+      ],
+      "_notes": {
+        "操作题": "真实考试中的操作题含画图/测量等，本卷用图形的运动判断题+选择题替代",
+        "估算": "真实考试常考乘法估算（如35×17≈600），用近似计算题替代"
+      }
+    }
+  }
+};
+
+// ═══════════════════════════════════════════
+//  应用逻辑
+// ═══════════════════════════════════════════
+
+const gen = new Generator();
+let currentPaper = null;
+let currentMode = 'free'; // 'free' | 'exam'
+
+// 初始化年级下拉
+const gradeSelect = document.getElementById('gradeSelect');
+for (const g of Object.keys(BANK)) {
+  const opt = document.createElement('option');
+  opt.value = g;
+  const m = BANK[g].meta;
+  opt.textContent = (m.subjectName||'') + ' ' + (m.gradeLabel||'') + ' ' + (m.semester||'');
+  gradeSelect.appendChild(opt);
+}
+
+// 模式切换
+document.getElementById('modeFree').addEventListener('click', () => switchMode('free'));
+document.getElementById('modeExam').addEventListener('click', () => switchMode('exam'));
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeFree').classList.toggle('active', mode==='free');
+  document.getElementById('modeExam').classList.toggle('active', mode==='exam');
+  document.getElementById('freeModeControls').style.display = mode==='free'?'':'none';
+  document.getElementById('examModeControls').style.display = mode==='exam'?'':'none';
+  updateExamInfo();
+}
+
+// 年级切换
+gradeSelect.addEventListener('change', () => {
+  const g = gradeSelect.value;
+  const kpTags = document.getElementById('kpTags');
+  kpTags.innerHTML = '';
+  if (!g) { kpTags.innerHTML = '<span style="color:#999;font-size:13px">请先选择年级</span>'; return; }
+  const meta = BANK[g].meta;
+  document.getElementById('headerSubtitle').textContent = meta.textbook || '';
+  for (const kp of (meta.knowledgePoints||[])) {
+    const tag = document.createElement('span');
+    tag.className = 'kp-tag active';
+    tag.dataset.kpId = kp.id;
+    tag.textContent = kp.name;
+    tag.title = '难度:'+kp.difficulty + (kp.subTopics?' | 含:'+kp.subTopics.join('、'):'');
+    tag.addEventListener('click', () => tag.classList.toggle('active'));
+    kpTags.appendChild(tag);
+  }
+  updateExamInfo();
+});
+
+function updateExamInfo() {
+  const g = gradeSelect.value;
+  const box = document.getElementById('examInfoBox');
+  if (!g || !BANK[g].exam) { box.style.display = 'none'; return; }
+  const e = BANK[g].exam;
+  box.style.display = 'flex';
+  box.innerHTML = '<span>📋 满分:'+e.totalScore+'分</span><span>⏱ '+e.duration+'分钟</span><span>📝 '+e.sections.length+'大题</span>';
+}
+
+// 滑块
+document.getElementById('templateRatio').addEventListener('input', function(){
+  document.getElementById('ratioVal').textContent = this.value + '%';
+});
+
+// 生成
+document.getElementById('btnGenerate').addEventListener('click', () => {
+  const g = gradeSelect.value;
+  if (!g) { showWarning('请先选择年级'); return; }
+
+  const bank = BANK[g];
+
+  if (currentMode === 'exam') {
+    if (!bank.exam) { showWarning('该年级暂未配置套卷，请切换到自由组卷模式'); return; }
+    currentPaper = gen.generateExam({
+      exam: bank.exam,
+      meta: bank.meta,
+      staticQuestions: bank.staticQuestions,
+      templates: bank.templates,
+    });
+  } else {
+    const activeTags = document.querySelectorAll('#kpTags .kp-tag.active');
+    const knowledgePoints = Array.from(activeTags).map(t => t.dataset.kpId);
+    if (knowledgePoints.length === 0) { showWarning('请至少选择一个知识点'); return; }
+    const totalQuestions = parseInt(document.getElementById('totalQuestions').value) || 15;
+    const templateRatio = parseInt(document.getElementById('templateRatio').value) / 100;
+    const diffMin = parseInt(document.getElementById('diffMin').value) || 1;
+    const diffMax = parseInt(document.getElementById('diffMax').value) || 5;
+    currentPaper = gen.generate({
+      meta: bank.meta, staticQuestions: bank.staticQuestions, templates: bank.templates,
+      totalQuestions, templateRatio, knowledgePoints, difficultyRange: [diffMin, diffMax]
+    });
+  }
+
+  renderPreview(currentPaper);
+  document.getElementById('btnDownload').disabled = false;
+  document.getElementById('btnPrint').disabled = false;
+  hideWarning();
+});
+
+function renderPreview(paper) {
+  const preview = document.getElementById('preview');
+  const typeLabels = {calculation:'计算',fill_blank:'填空',true_false:'判断',choice:'选择',application:'应用'};
+  let html = '';
+
+  if (paper.mode === 'exam') {
+    // 套卷排版
+    html += '<div class="paper-title">' + paper.title + '</div>';
+    html += '<div class="paper-subtitle">' + paper.subtitle + '</div>';
+    html += '<div class="exam-header-line">';
+    html += paper.headerFields.map(f => '<span>' + f + '</span>').join('');
+    html += '<span>满分:' + paper.totalScore + '分 | ' + paper.duration + '分钟</span>';
+    html += '</div>';
+
+    for (const sec of paper.sections) {
+      html += '<div class="section-title">' + sec.name + '</div>';
+      if (sec.instruction) html += '<div class="section-inst">' + sec.instruction + '</div>';
+
+      if (sec.subSections) {
+        for (const sub of sec.subSections) {
+          html += '<div class="subsection-title">' + (sub.name||'') + '</div>';
+          if (sub.instruction) html += '<div class="section-inst">' + sub.instruction + '</div>';
+          for (const q of (sub.questions || [])) {
+            html += renderOneQuestion(q, typeLabels);
+          }
+        }
+      } else {
+        for (const q of (sec.questions || [])) {
+          html += renderOneQuestion(q, typeLabels);
+        }
+      }
+    }
+    html += '<div class="total-score-row">总分: ' + paper.totalScore + '分</div>';
+
+  } else {
+    // 自由组卷排版
+    html += '<div class="paper-title">' + paper.title + '</div>';
+    html += '<div class="paper-subtitle">' + paper.subtitle + '</div>';
+    html += '<div class="paper-meta">';
+    html += '<span>题数:' + paper.config.totalQuestions + ' | 模板:' + paper.config.templateCount + ' | 静态:' + paper.config.staticCount + '</span>';
+    html += '<span>知识点:' + (paper.config.knowledgePoints.join('、')||'全部') + '</span>';
+    html += '</div>';
+    for (const q of paper.questions) { html += renderOneQuestion(q, typeLabels); }
+  }
+
+  preview.innerHTML = html;
+  preview.classList.add('show');
+  preview.scrollIntoView({behavior:'smooth'});
+}
+
+function renderOneQuestion(q, typeLabels) {
+  let h = '<div class="question-item">';
+  h += '<span class="q-index">' + q.index + '.</span>';
+  h += '<span class="q-type">[' + (typeLabels[q.type]||q.type) + ']</span>';
+  if (q.points) h += '<span class="q-points">(' + q.points + '分)</span>';
+  h += '<div class="q-text">' + q.question + '</div>';
+  if (q.options&&q.options.length>0) h += '<div class="q-options">' + q.options.join('&emsp;') + '</div>';
+  h += '<div class="q-answer-line">答案: ' + q.answer.finalAnswer;
+  if (q.answer.steps&&q.answer.steps.length>0) h += ' (' + q.answer.steps.map(s=>s.label+'='+s.value).join(' → ') + ')';
+  h += '</div></div>';
+  return h;
+}
+
+// 下载Word
+document.getElementById('btnDownload').addEventListener('click', () => {
+  if (!currentPaper) return;
+  const doc = currentPaper.mode === 'exam' ? buildExamDoc(currentPaper) : buildFreeDoc(currentPaper);
+  const blob = new Blob(['﻿' + doc], {type:'application/msword;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (currentPaper.title||'试卷') + '.doc';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+function buildFreeDoc(paper) {
+  let h = docHead(paper);
+  h += '<h1>' + paper.title + '</h1><h3>' + paper.subtitle + '</h3>';
+  h += '<div class="info">共' + paper.config.totalQuestions + '题</div>';
+  for (const q of paper.questions) h += docQuestion(q);
+  h += docAnswerPage(paper);
+  return h + '</body></html>';
+}
+
+function buildExamDoc(paper) {
+  let h = docHead(paper);
+  h += '<h1>' + paper.title + '</h1><h3>' + paper.subtitle + '</h3>';
+  // 密封线
+  h += '<div class="seal">' + paper.headerFields.join('&emsp;') + '&emsp;满分:' + paper.totalScore + '分&emsp;时间:' + paper.duration + '分钟</div>';
+
+  for (const sec of paper.sections) {
+    h += '<div class="sec-title">' + sec.name + '</div>';
+    if (sec.instruction) h += '<div class="sec-inst">' + sec.instruction + '</div>';
+
+    if (sec.subSections) {
+      for (const sub of sec.subSections) {
+        h += '<div class="sub-title">' + (sub.name||'') + '</div>';
+        if (sub.instruction) h += '<div class="sub-inst">' + sub.instruction + '</div>';
+        for (const q of (sub.questions || [])) h += docExamQuestion(q);
+      }
+    } else {
+      for (const q of (sec.questions || [])) h += docExamQuestion(q);
+    }
+  }
+
+  h += '<div class="score-row">总分: ' + paper.totalScore + '分</div>';
+  h += docExamAnswerPage(paper);
+  return h + '</body></html>';
+}
+
+function docHead(paper) {
+  return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>' +
+    'body{font-family:"Microsoft YaHei",SimSun;font-size:14px;line-height:2;padding:25px}' +
+    'h1{text-align:center;font-size:20px}h3{text-align:center;color:#666;font-size:13px;font-weight:normal}' +
+    '.info{color:#999;font-size:12px;margin-bottom:8px;border-bottom:1px dashed #ccc;padding-bottom:4px}' +
+    '.seal{border:2px solid #333;padding:10px 14px;margin-bottom:18px;font-size:13px;display:flex;justify-content:space-between}' +
+    '.sec-title{font-size:16px;font-weight:700;margin:18px 0 6px;padding:4px 8px;background:#f0f0f0}' +
+    '.sec-inst{font-size:12px;color:#888;margin-bottom:8px}' +
+    '.sub-title{font-weight:600;margin:10px 0 2px}' +
+    '.sub-inst{font-size:12px;color:#888;margin-bottom:6px}' +
+    '.q{margin-bottom:10px;padding-bottom:6px;border-bottom:1px dotted #eee}' +
+    '.qi{font-weight:700;color:#1a73e8}.qp{color:#e67e22;font-size:11px;float:right}' +
+    '.ans{color:#999;font-size:12px}' +
+    '.page-break{page-break-before:always}' +
+    '.score-row{text-align:right;font-weight:700;color:#e67e22;margin-top:16px;border-top:1px solid #ddd;padding-top:8px}' +
+    '@page{size:A4;margin:1.8cm}</style></head><body>';
+}
+
+function docQuestion(q) {
+  let h = '<div class="q"><span class="qi">' + q.index + '.</span> ' + q.question + '<br>';
+  if (q.options&&q.options.length>0) h += '&emsp;' + q.options.join('&emsp;') + '<br>';
+  h += '<span class="ans">答案: ' + q.answer.finalAnswer + '</span></div>';
+  return h;
+}
+
+function docExamQuestion(q) {
+  let h = '<div class="q"><span class="qi">' + q.index + '.</span>';
+  if (q.points) h += '<span class="qp">(' + q.points + '分)</span>';
+  h += ' ' + q.question + '<br>';
+  if (q.options&&q.options.length>0) h += '&emsp;' + q.options.join('&emsp;') + '<br>';
+  return h; // 套卷不显示答案在题目下方
+}
+
+function docAnswerPage(paper) {
+  let h = '<div class="page-break"></div><h1>参考答案</h1>';
+  for (const q of paper.questions) {
+    h += '<div class="q"><span class="qi">' + q.index + '.</span> ' + q.answer.finalAnswer;
+    if (q.answer.steps&&q.answer.steps.length>0) h += ' <span class="ans">(' + q.answer.steps.map(s=>s.label+'='+s.value).join(' → ') + ')</span>';
+    h += '</div>';
+  }
+  return h;
+}
+
+function docExamAnswerPage(paper) {
+  let h = '<div class="page-break"></div><h1>参考答案</h1>';
+  for (const q of paper.questions) {
+    h += '<div class="q"><span class="qi">' + q.index + '.</span>';
+    if (q.points) h += ' (' + q.points + '分) ';
+    h += q.answer.finalAnswer;
+    if (q.answer.steps&&q.answer.steps.length>0) h += ' <span class="ans">[' + q.answer.steps.map(s=>s.label+'='+s.value).join(' → ') + ']</span>';
+    h += '</div>';
+  }
+  return h;
+}
+
+// 打印
+document.getElementById('btnPrint').addEventListener('click', () => {
+  if (!currentPaper) return;
+  const win = window.open('','_blank');
+  win.document.write(currentPaper.mode==='exam'?buildExamDoc(currentPaper):buildFreeDoc(currentPaper));
+  win.document.close();
+  setTimeout(()=>win.print(),500);
+});
+
+function showWarning(m){let w=document.getElementById('warning');w.textContent=m;w.classList.add('show')}
+function hideWarning(){document.getElementById('warning').classList.remove('show')}
+</script>
+</body>
+</html>

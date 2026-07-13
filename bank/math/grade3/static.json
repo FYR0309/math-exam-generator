@@ -1,0 +1,463 @@
+[
+  {
+    "id": "g3-s-001",
+    "type": "fill_blank",
+    "question": "平年有____天，闰年有____天。平年二月有____天，闰年二月有____天。",
+    "answer": "365, 366, 28, 29",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网·三下第一单元"
+  },
+  {
+    "id": "g3-s-002",
+    "type": "fill_blank",
+    "question": "公历年份是____的倍数的一般是闰年；但公历年份是整百数的，必须是____的倍数才是闰年。",
+    "answer": "4, 400",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["整百年判断"],
+    "source": "21世纪教育网·三下第一单元"
+  },
+  {
+    "id": "g3-s-003",
+    "type": "choice",
+    "question": "下列年份中，哪个是闰年？",
+    "options": ["A. 1998", "B. 2000", "C. 2010", "D. 1900"],
+    "answer": "B",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["1900是整百年但不是400的倍数"],
+    "source": "21世纪教育网·三下第一单元"
+  },
+  {
+    "id": "g3-s-004",
+    "type": "true_false",
+    "question": "7月是大月，8月是小月。（ ）",
+    "answer": "×",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 1,
+    "errorProne": ["七八月连续大月"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-005",
+    "type": "true_false",
+    "question": "晚上12时就是24时，也是第二天的0时。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-006",
+    "type": "fill_blank",
+    "question": "下午4时30分用24时记时法表示是____；晚上11时用24时记时法表示是____。",
+    "answer": "16:30, 23:00",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-007",
+    "type": "choice",
+    "question": "图书馆的开放时间是8:30—17:30，一天共开放（ ）。",
+    "options": ["A. 8小时30分", "B. 9小时", "C. 9小时30分"],
+    "answer": "B",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["经过时间计算"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-008",
+    "type": "fill_blank",
+    "question": "一列客车18时20分从北京开车，22时40分到达石家庄。路上用了____小时____分。",
+    "answer": "4, 20",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["跨小时计算"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-009",
+    "type": "fill_blank",
+    "question": "乐乐通常晚上8:30睡觉，第二天早上7:00起床，他一共睡了____小时____分。",
+    "answer": "10, 30",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["跨天计算"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-010",
+    "type": "true_false",
+    "question": "一个月最多有5个星期日。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-011",
+    "type": "calculation",
+    "question": "30 × 50 = ？",
+    "answer": "1500",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网·三下第二单元"
+  },
+  {
+    "id": "g3-s-012",
+    "type": "calculation",
+    "question": "25 × 40 = ？",
+    "answer": "1000",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-013",
+    "type": "calculation",
+    "question": "24 × 12 = ？",
+    "answer": "288",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-014",
+    "type": "calculation",
+    "question": "78 × 19 = ？",
+    "answer": "1482",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": ["进位"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-015",
+    "type": "calculation",
+    "question": "48 × 65 = ？",
+    "answer": "3120",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 3,
+    "errorProne": ["数位对齐"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-016",
+    "type": "calculation",
+    "question": "56 × 67 = ？",
+    "answer": "3752",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 3,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-017",
+    "type": "calculation",
+    "question": "158 × 24 = ？",
+    "answer": "3792",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 3,
+    "errorProne": ["三位数乘两位数"],
+    "source": "21世纪教育网·三下第三单元"
+  },
+  {
+    "id": "g3-s-018",
+    "type": "calculation",
+    "question": "325 × 26 = ？",
+    "answer": "8450",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 3,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-019",
+    "type": "calculation",
+    "question": "150 × 30 = ？",
+    "answer": "4500",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": ["末尾0个数的处理"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-020",
+    "type": "calculation",
+    "question": "230 × 40 = ？",
+    "answer": "9200",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-021",
+    "type": "calculation",
+    "question": "450 × 80 = ？",
+    "answer": "36000",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 3,
+    "errorProne": ["末尾0个数"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-022",
+    "type": "true_false",
+    "question": "50×60的积的末尾只有两个0。（ ）",
+    "answer": "×",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": ["乘积末尾0的判断"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-023",
+    "type": "true_false",
+    "question": "两位数乘两位数的积可能是三位数或四位数。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-024",
+    "type": "fill_blank",
+    "question": "125×80的积末尾有____个0。",
+    "answer": "4",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": ["乘积末尾0的个数"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-025",
+    "type": "fill_blank",
+    "question": "最大的三位数（999）乘最小的两位数（10），积是____。",
+    "answer": "9990",
+    "knowledgePoints": ["multi-digit-multiplication"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-026",
+    "type": "fill_blank",
+    "question": "8角6分 = ____元；2.5元 = ____元____角。",
+    "answer": "0.86, 2, 5",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 1,
+    "errorProne": ["单位换算"],
+    "source": "21世纪教育网·三下第六单元"
+  },
+  {
+    "id": "g3-s-027",
+    "type": "fill_blank",
+    "question": "1元9分 = ____元；2元3角6分 = ____元。",
+    "answer": "1.09, 2.36",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 2,
+    "errorProne": ["中间有0的小数"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-028",
+    "type": "choice",
+    "question": "下面哪个小数最大？",
+    "options": ["A. 0.7", "B. 0.3", "C. 0.9", "D. 1.2"],
+    "answer": "D",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-029",
+    "type": "calculation",
+    "question": "0.3 + 0.4 = ？",
+    "answer": "0.7",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-030",
+    "type": "calculation",
+    "question": "7.3 - 2.6 = ？",
+    "answer": "4.7",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 2,
+    "errorProne": ["退位"],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-031",
+    "type": "calculation",
+    "question": "9 - 7.6 = ？",
+    "answer": "1.4",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 2,
+    "errorProne": ["整数减小数"],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-032",
+    "type": "calculation",
+    "question": "27.5 - 13.8 = ？",
+    "answer": "13.7",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 3,
+    "errorProne": [],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-033",
+    "type": "fill_blank",
+    "question": "在〇里填上 >、< 或 =：0.8 〇 1.1，3.2 〇 2.3，8角 〇 0.8元。",
+    "answer": "<, >, =",
+    "knowledgePoints": ["decimal-life"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-034",
+    "type": "fill_blank",
+    "question": "2分米 = ____厘米；3厘米 = ____毫米；6000米 = ____千米。",
+    "answer": "20, 30, 6",
+    "knowledgePoints": ["measurement-2"],
+    "difficulty": 1,
+    "errorProne": ["单位换算进率"],
+    "source": "21世纪教育网·三下第四单元"
+  },
+  {
+    "id": "g3-s-035",
+    "type": "true_false",
+    "question": "电梯运行时的运动是平移。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["figure-movement"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网·三下第七单元"
+  },
+  {
+    "id": "g3-s-036",
+    "type": "true_false",
+    "question": "拧瓶盖时，瓶盖的运动是旋转。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["figure-movement"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-037",
+    "type": "choice",
+    "question": "下面说法中，不正确的是（ ）。",
+    "options": [
+      "A. 电梯运行时的运动是平移",
+      "B. 拧瓶盖时，瓶盖的运动是旋转",
+      "C. 汽车沿直线行驶的过程中，车身的运动是旋转"
+    ],
+    "answer": "C",
+    "knowledgePoints": ["figure-movement"],
+    "difficulty": 2,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-038",
+    "type": "true_false",
+    "question": "图形在平移时，形状和大小都不发生变化。（ ）",
+    "answer": "√",
+    "knowledgePoints": ["figure-movement"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-039",
+    "type": "true_false",
+    "question": "物体在平移、旋转时，它的大小、位置、方向都不会改变。（ ）",
+    "answer": "×",
+    "knowledgePoints": ["figure-movement"],
+    "difficulty": 2,
+    "errorProne": ["旋转改变方向"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-040",
+    "type": "choice",
+    "question": "时钟的秒针在滴答滴答转动属于（ ）现象。",
+    "options": ["A. 平移", "B. 旋转", "C. 无法确定"],
+    "answer": "B",
+    "knowledgePoints": ["figure-movement"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-041",
+    "type": "fill_blank",
+    "question": "2025年是____年（填\"平年\"或\"闰年\"），2月有____天，全年共____天。",
+    "answer": "平年, 28, 365",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["2025不能被4整除"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-042",
+    "type": "choice",
+    "question": "下午2点用24时记时法表示是（ ）。",
+    "options": ["A. 12:00", "B. 14:00", "C. 18:00"],
+    "answer": "B",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-043",
+    "type": "fill_blank",
+    "question": "《新闻联播》在晚上7:00开始播出，这个\"晚上7:00\"用的是____计时法。",
+    "answer": "12时",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 1,
+    "errorProne": [],
+    "source": "教习网"
+  },
+  {
+    "id": "g3-s-044",
+    "type": "fill_blank",
+    "question": "汽车早上10:00出发，当天下午4:00到达，汽车走了____小时。",
+    "answer": "6",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 2,
+    "errorProne": ["普通计时转24时"],
+    "source": "21世纪教育网"
+  },
+  {
+    "id": "g3-s-045",
+    "type": "choice",
+    "question": "奶奶今年72岁，可她只过了18个生日，她的生日是（ ）。",
+    "options": ["A. 2月28日", "B. 2月29日", "C. 12月31日"],
+    "answer": "B",
+    "knowledgePoints": ["year-month-day"],
+    "difficulty": 3,
+    "errorProne": ["闰年2月29日"],
+    "source": "21世纪教育网"
+  }
+]
